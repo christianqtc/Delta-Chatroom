@@ -23,11 +23,12 @@ This README would normally document whatever steps are necessary to get your app
 ### Team Members ###
 
 * Nikolai Bandong
-
+      nbandong@horizon.csueastbay.edu
 * Christian Calderon
-
+      Christianqtc@yahoo.com
 * Alejandro Rivera
-
+      arivera46@horizon.csueastbay.edu
 * Suritaneil Sahota
-
+      ssahota7@horizon.csueastbay.edu
 * Daniel Vazquez
+      daniel.vazquez0112@gmail.com
