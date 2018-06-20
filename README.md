@@ -1,33 +1,33 @@
 # README for CS3410 #
-
-
-
-
 This README would normally document whatever steps are necessary to get your application up and running.
 
 ### What is this repository for? ###
 
 * Quick summary
 * Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* [Trello](https://trello.com/b/R187VRYt/cs4310)
+* [BitBucket](https://bitbucket.org/SemperFiFL/cs4310)
+
 
 ### How do I get set up? ###
 
 * Summary of set up
 * Configuration
 * Dependencies
-face
 * Database configuration
 * How to run tests
-* Deployment instructions
+* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* [Learn Git](https://product.hubspot.com/blog/git-and-github-tutorial-for-beginners)
 
-### Contribution guidelines ###
 
-* Writing tests
-* Code review
-* Other guidelines
+### Team Members ###
 
-### Who do I talk to? ###
+* Nikolai Bandong
 
-* Repo owner or admin
-* Other community or team contact
+* Christian Calderon
+
+* Alejandro Rivera
+
+* Suritaneil Sahota
+
+* Daniel Vazquez
