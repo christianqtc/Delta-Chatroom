@@ -1,10 +1,9 @@
 # README for CS3410 #
-This README would normally document whatever steps are necessary to get your application up and running.
 
-### What is this repository for? ###
+### Project Proposal ###
 
-* Quick summary
-* Version
+For the project we will implement a chat board application in Java with UI, backend and multi-user interface to consider. We will have a board where we would have multiple users chat simultaneously. We would also use a login/password encrypted authentication on the backend. The chat server would accept RESTful API call to change and present data. Initial version will only accept text input with no attachments.
+
 * [Trello](https://trello.com/b/R187VRYt/cs4310)
 * [BitBucket](https://bitbucket.org/SemperFiFL/cs4310)
 
@@ -14,13 +13,16 @@ This README would normally document whatever steps are necessary to get your app
 * Summary of set up
 * Configuration
 * Dependencies
-* Database configuration
 * How to run tests
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-* [Learn Git](https://product.hubspot.com/blog/git-and-github-tutorial-for-beginners)
+* [Learn Git](https://www.atlassian.com/git/tutorials/learn-git-with-bitbucket-cloud)
 
+#### Tools ####
+* [Atom](https://atom.io) (Extensible text editor with git functionality)
+* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+* [SourceTree](https://www.sourcetreeapp.com/)(Git management)
 
-### Team Members ###
+### Delta Team Members ###
 
 * Nikolai Bandong
       nbandong@horizon.csueastbay.edu
