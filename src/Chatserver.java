@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -11,7 +13,17 @@ public class Chatserver
     private final ServerSocket gServerSocket;
     
     private final List<Client> gClients = new ArrayList<>();
-    protected static final Logger gLogger = Logger.getLogger("com.cs4310delta");
+    protected static final Logger LOGGER = Logger.getLogger("com.cs4310delta");
+    
+    static
+    {
+        // For debugging
+        LOGGER.setLevel(Level.FINEST);
+        
+        ConsoleHandler handler = new ConsoleHandler();
+        handler.setLevel(Level.FINEST);
+        LOGGER.addHandler(handler);
+    }
     
     public void onStart()
     {
@@ -103,7 +115,7 @@ public class Chatserver
                         {
                             try
                             {
-                                String data = client.ws_readFrame();
+                                String data = client.ws_readDataFrame();
                                 onMessage( client, data );
                             }
                             catch ( SocketException e )
@@ -131,7 +143,7 @@ public class Chatserver
     }
     
     public static void main( String[] args )
-    { 
+    {
         try
         {
             Chatserver server = new Chatserver( new InetSocketAddress( "localhost", 8000 ) );

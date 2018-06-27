@@ -26,6 +26,11 @@ public class Client
         ws_init();
     }
     
+    public String getAddress()
+    {
+        return gAddress;
+    }
+    
     public void send( String data )
     {
         ws_sendDataFrame( FRAME_OPCODE_TEXT, data.getBytes() );
@@ -39,12 +44,8 @@ public class Client
     
     public void disconnect( int statusCode, String reason )
     {
-        // Since we're the one sending the close signal, there's no need
-        // to echo the client's response to this data frame.
-        if ( g_wsEchoCloseSignal )
+        if ( !g_wsSentCloseSignal )
         {
-            g_wsEchoCloseSignal = false;
-            
             char[] chars = reason.toCharArray();
             byte[] payload = new byte[ chars.length + 2 ];
             payload[0] = (byte)((statusCode & 0xFF00) >> 8); 
@@ -63,7 +64,7 @@ public class Client
     
     public void log( Level level, String msg )
     {
-        gServer.gLogger.log( level, "{0}: {1}", new Object[] { gAddress, msg }  );
+        Chatserver.LOGGER.log( level, "{0}: {1}", new Object[] { gAddress, msg }  );
     }
     
     /*
@@ -88,11 +89,23 @@ public class Client
     private static final byte FRAME_OPCODE_PING = 0x9;
     private static final byte FRAME_OPCODE_PONG = 0xA;
     
-    private boolean g_wsEchoCloseSignal;
+    private static final String MAGIC_STRING = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+    
+    private boolean g_wsSentCloseSignal;
     
     private void ws_init()
     {
-        g_wsEchoCloseSignal = true;
+        g_wsSentCloseSignal = false;
+    }
+    
+    protected boolean ws_isControlOpcode( byte opcode )
+    {
+        return ( opcode & 0x08 ) != 0;
+    }
+    
+    private void ws_log( String msg )
+    {
+        System.out.println( msg );
     }
     
     // Perform the WebSocket handshake. True if successful, false otherwise.
@@ -174,11 +187,9 @@ public class Client
             // Generate the server key.
             String serverKey;
             {
-                String magicString = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-
                 // Hash with SHA-1
                 MessageDigest sha1 = MessageDigest.getInstance( "SHA-1" );
-                byte[] result = sha1.digest(( clientKey + magicString ).getBytes());
+                byte[] result = sha1.digest(( clientKey + MAGIC_STRING ).getBytes());
 
                 // Encode the hash with Base64 to yield the final server key.
                 serverKey = Base64.getEncoder().encodeToString( result );
@@ -205,11 +216,12 @@ public class Client
         return true;
     }
     
-    private static final int FRAME_TYPEINFO = 0;
-    private static final int FRAME_PAYLOADINFO = 1;
-    private static final int FRAME_EXTPAYLOADINFO = 2;
-    private static final int FRAME_MASK = 3;
-    private static final int FRAME_PAYLOAD = 4;
+    // Read states for ws_readDataFrame()
+    private static final int FRAME_READSTATE_TYPEINFO = 0;
+    private static final int FRAME_READSTATE_PAYLOADINFO = 1;
+    private static final int FRAME_READSTATE_EXTPAYLOADLEN = 2;
+    private static final int FRAME_READSTATE_MASK = 3;
+    private static final int FRAME_READSTATE_PAYLOAD = 4;
     
     protected void ws_sendDataFrame( byte opCode, byte[] payload )
     {
@@ -228,6 +240,17 @@ public class Client
         
         try
         {
+            if ( ws_isControlOpcode( opCode ) )
+            {
+                if ( ( opCode & 0x0F ) == FRAME_OPCODE_CLOSE )
+                {
+                    if ( !g_wsSentCloseSignal )
+                        g_wsSentCloseSignal = true;
+                    else
+                        return; // We're not going to send multiple close signals.
+                }
+            }
+            
             OutputStream out = gSocket.getOutputStream();
             
             byte typeInfo = 0;
@@ -235,7 +258,7 @@ public class Client
                 typeInfo |= 0x80;
             typeInfo |= ( opCode & 0x0F );
             out.write( Byte.toUnsignedInt(typeInfo) );
-
+            
             byte payloadInfo = 0;
             if ( masked )
                 payloadInfo |= 0x80;
@@ -298,19 +321,25 @@ public class Client
         }
     }
     
-    protected String ws_readFrame() throws IOException
+    protected String ws_readDataFrame() throws IOException
     {
-        ByteArrayOutputStream payloadBuffer = new ByteArrayOutputStream();
+        // Buffer consisting of a complete message.
+        ByteArrayOutputStream messageBuffer = new ByteArrayOutputStream();
+        
+        // Buffer for just handling payload of control frames, separate from messages.
+        ByteArrayOutputStream controlBuffer = new ByteArrayOutputStream();
         
         boolean lastFrame = false;
         byte opCode = 0;
+        byte ctrlOpCode = 0;
         
         while ( !lastFrame && !gSocket.isClosed() )
         {
-            int frameReadState = FRAME_TYPEINFO;
+            int frameReadState = FRAME_READSTATE_TYPEINFO;
             
+            boolean controlFrame = false;
             boolean masked = false;
-            long payloadLen = 0L; byte readBytePos = 0; long bytesToRead = 0L;
+            long payloadLen = 0L; long readBytePos = 0L; long bytesToRead = 0L;
             long maskKey = 0L;
             
             // Process incoming frames, until we hit the last marked frame.
@@ -325,125 +354,145 @@ public class Client
                 
                 if ( frameBytePos == 0 )
                 {
-                    log( Level.FINEST, "---FRAME START---" );
+                    ws_log( "---FRAME START---" );
                 }
                 
-                log( Level.FINEST, String.format("%8s", Integer.toBinaryString(Byte.toUnsignedInt(b)) ).replace(' ', '0') );
+                ws_log( String.format("%8s", Integer.toBinaryString(Byte.toUnsignedInt(b)) ).replace(' ', '0') );
                 
                 switch (frameReadState) 
                 {
-                    case FRAME_TYPEINFO:
+                    case FRAME_READSTATE_TYPEINFO:
                     {
-                        lastFrame = ((b >>> 7) & 0xFF) != 0;
                         byte _opCode = (byte)(( b & 0x0F ));
-                        if ( opCode == 0 )
+                        
+                        controlFrame = ws_isControlOpcode( _opCode );
+                        
+                        if ( controlFrame )
+                            ctrlOpCode = _opCode;
+                        else if ( opCode == 0 )
                             opCode = _opCode;
                         
-                        // If opcode is a control opcode, ALWAYS is last frame.
-                        if ( ( opCode & 0x8 ) != 0 )
-                            lastFrame = true;
+                        if ( controlFrame )
+                            lastFrame = true; // A control frame CANNOT be fragmented.
+                        else
+                            lastFrame = ((b >>> 7) & 0xFF) != 0;
                         
-                        log( Level.FINEST, "FIN: " + lastFrame );
-                        log( Level.FINEST, "OPCODE: " + opCode );
+                        if ( controlFrame )
+                        {
+                            ws_log( "CTRL. OPCODE: " + ctrlOpCode );
+                        }
+                        else
+                        {
+                            ws_log( "FIN: " + lastFrame );
+                            ws_log( "OPCODE: " + opCode );
+                        }
                         
-                        frameReadState = FRAME_PAYLOADINFO;
+                        frameReadState = FRAME_READSTATE_PAYLOADINFO;
                         break;
                     }
-                    case FRAME_PAYLOADINFO:
+                    case FRAME_READSTATE_PAYLOADINFO:
                     {
                         masked = (b >>> 7) != 0;
-                        log( Level.FINEST, "MASKED: " + masked );
+                        ws_log( "MASKED: " + masked );
                         payloadLen = Byte.toUnsignedInt(b) & 0x7F;
                         
                         if ( payloadLen <= 125 )
                         {
-                            log( Level.FINEST, "PAYLOAD LENGTH: " + payloadLen );
+                            ws_log( "PAYLOAD LENGTH: " + payloadLen );
                             
                             if ( masked )
                             {
-                                frameReadState = FRAME_MASK;
+                                frameReadState = FRAME_READSTATE_MASK;
                                 readBytePos = 0;
                                 bytesToRead = 4;
                             }
                             else
                             {
-                                frameReadState = FRAME_PAYLOAD;
+                                frameReadState = FRAME_READSTATE_PAYLOAD;
                                 readBytePos = 0;
                                 bytesToRead = payloadLen;
                             }
                         }
                         else if ( payloadLen == 126 )
                         {
-                            frameReadState = FRAME_EXTPAYLOADINFO;
+                            payloadLen = 0L;
+                            frameReadState = FRAME_READSTATE_EXTPAYLOADLEN;
                             readBytePos = 0;
                             bytesToRead = 2; // read next 2 bytes for payload length
                         }
                         else if ( payloadLen == 127 )
                         {
-                            frameReadState = FRAME_EXTPAYLOADINFO;
+                            payloadLen = 0L;
+                            frameReadState = FRAME_READSTATE_EXTPAYLOADLEN;
                             readBytePos = 0;
                             bytesToRead = 8; // read next 8 bytes for payload length
                         }   
                         break;
                     }
-                    case FRAME_EXTPAYLOADINFO:
+                    case FRAME_READSTATE_EXTPAYLOADLEN:
                     {
                         payloadLen <<= 8;
                         payloadLen |= Byte.toUnsignedInt(b);
                         
                         readBytePos++;
-                        if ( readBytePos == bytesToRead )
+                        if ( Long.compareUnsigned( readBytePos, bytesToRead ) == 0 )
                         {
-                            log( Level.FINEST, "EXTENDED PLEN: " + payloadLen );
+                            ws_log( "EXTENDED PLEN: " + payloadLen );
                             
                             if ( masked )
                             {
-                                frameReadState = FRAME_MASK;
+                                frameReadState = FRAME_READSTATE_MASK;
                                 readBytePos = 0;
                                 bytesToRead = 4;
                             }
                             else
                             {
-                                frameReadState = FRAME_PAYLOAD;
+                                frameReadState = FRAME_READSTATE_PAYLOAD;
                                 readBytePos = 0;
                                 bytesToRead = payloadLen;
                             }
                         }
                         break;
                     }
-                    case FRAME_MASK:
+                    case FRAME_READSTATE_MASK:
                     {
-                        maskKey |= ( Byte.toUnsignedInt(b) << ( 8 * readBytePos ) );
+                        maskKey <<= 8;
+                        maskKey |= Byte.toUnsignedInt(b);
                         
                         readBytePos++;
-                        if ( readBytePos == bytesToRead )
+                        if ( Long.compareUnsigned( readBytePos, bytesToRead ) == 0 )
                         {
-                            log( Level.FINEST, "MASK: " + String.format("%"+bytesToRead*8L+"s", Long.toBinaryString( maskKey ) ).replace(' ', '0') );
+                            ws_log( "MASK: " + String.format("%"+bytesToRead*8L+"s", Long.toBinaryString( maskKey ) ).replace(' ', '0') );
                             
-                            frameReadState = FRAME_PAYLOAD;
+                            frameReadState = FRAME_READSTATE_PAYLOAD;
                             readBytePos = 0;
                             bytesToRead = payloadLen;
                         }   
                         
                         break;
                     }
-                    case FRAME_PAYLOAD:
+                    case FRAME_READSTATE_PAYLOAD:
                     {
                         byte d = b;
                         if ( masked )
                         {
-                            byte maskByte = (byte)( maskKey >>> ( ( readBytePos % 4 ) * 8 ) );
+                            byte maskByte = (byte)( maskKey >>> ( 24L - ( ( readBytePos % 4L ) * 8L ) ) );
                             d ^= maskByte;
                         }
                         
-                        payloadBuffer.write(Byte.toUnsignedInt(d));
+                        // Control frames can be injected between fragmented
+                        // message frames, so the payload of a control frame
+                        // has to be written to a separate buffer.
+                        
+                        if ( controlFrame )
+                            controlBuffer.write( Byte.toUnsignedInt(d) );
+                        else
+                            messageBuffer.write( Byte.toUnsignedInt(d) );
                         
                         readBytePos++;
                         if (readBytePos == bytesToRead) 
                         {
-                            payloadBuffer.flush();
-                            
-                            log( Level.FINEST, "----FRAME END----" );
+                            ws_log( "----FRAME END----" );
                             break OUTER;
                         }
                         
@@ -451,63 +500,62 @@ public class Client
                     }
                 }
                 
-                log( Level.FINEST, "-----------------");
+                ws_log( "-----------------");
             }
             
             if ( lastFrame )
             {
-                switch ( opCode )
+                if ( controlFrame )
+                    controlBuffer.flush();
+                else
+                    messageBuffer.flush();
+                
+                if ( controlFrame )
                 {
-                    case FRAME_OPCODE_CLOSE:
+                    // Handle behavior upon recieving a control frame.
+                    switch ( ctrlOpCode )
                     {
-                        // Close
-                        byte[] payload = payloadBuffer.toByteArray();
-                        if ( g_wsEchoCloseSignal )
+                        case FRAME_OPCODE_CLOSE:
                         {
+                            // Close
+                            byte[] payload = controlBuffer.toByteArray();
+                            
                             // Standard procedure is to echo.
-                            g_wsEchoCloseSignal = false;
-                            ws_sendDataFrame( FRAME_OPCODE_CLOSE, payload );
-                        }
-                        
-                        // In a Close data frame, the first two bytes of the payload is a status code.
-                        int statusCode = ( Byte.toUnsignedInt(payload[0]) << 8 ) | Byte.toUnsignedInt( payload[1] );
-                        
-                        // Flush.
-                        lastFrame = false;
-                        opCode = 0;
-                        payloadBuffer.reset();
-                        
-                        // Tell the server we've disconnected.
-                        gServer.onClose( this, statusCode, payload.length > 2 ? payloadBuffer.toString().substring(2) : "" );
-                        
-                        break;
-                    }
-                    case FRAME_OPCODE_PING:
-                    {
-                        // Standard procedure is to echo wtih a Pong data frame.
-                        byte[] payload = payloadBuffer.toByteArray();
-                        ws_sendDataFrame( FRAME_OPCODE_PONG, payload );
+                            if ( !g_wsSentCloseSignal )
+                                ws_sendDataFrame( FRAME_OPCODE_CLOSE, payload );
 
-                        // Flush.
-                        lastFrame = false;
-                        opCode = 0;
-                        payloadBuffer.reset();
-                        
-                        break;
+                            // In a Close data frame, the first two bytes of the payload is a status code.
+                            int statusCode = ( Byte.toUnsignedInt(payload[0]) << 8 ) | Byte.toUnsignedInt( payload[1] );
+
+                            // Tell the server we've disconnected.
+                            gServer.onClose( this, statusCode, payload.length > 2 ? controlBuffer.toString().substring(2) : "" );
+
+                            break;
+                        }
+                        case FRAME_OPCODE_PING:
+                        {
+                            // Standard procedure is to echo back with a Pong data frame.
+                            byte[] payload = controlBuffer.toByteArray();
+                            ws_sendDataFrame( FRAME_OPCODE_PONG, payload );
+                            
+                            break;
+                        }
+                        case FRAME_OPCODE_PONG:
+                        {
+                            break;
+                        }
                     }
-                    case FRAME_OPCODE_PONG:
-                    {
-                        // Flush. Ignore it.
-                        lastFrame = false;
-                        opCode = 0;
-                        payloadBuffer.reset();
-                        break;
-                    }
+                    
+                    // Always discard control frames.
+                    controlFrame = false;
+                    lastFrame = false;
+                    ctrlOpCode = 0;
+                    controlBuffer.reset();
                 }
             }
         }
         
         // If control flow reaches here, it's a message.
-        return payloadBuffer.toString();
+        return messageBuffer.toString();
     }
 }
