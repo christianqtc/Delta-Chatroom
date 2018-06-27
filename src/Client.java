@@ -347,7 +347,7 @@ public class Client
             for (long frameBytePos = 0;; frameBytePos++) 
             {
                 int _b = gSocket.getInputStream().read();
-                if ( _b <= 0 )
+                if ( _b < 0 )
                     break;
                 
                 byte b = (byte)(_b);
@@ -490,7 +490,7 @@ public class Client
                             messageBuffer.write( Byte.toUnsignedInt(d) );
                         
                         readBytePos++;
-                        if (readBytePos == bytesToRead) 
+                        if ( Long.compareUnsigned( readBytePos, bytesToRead ) == 0 ) 
                         {
                             ws_log( "----FRAME END----" );
                             break OUTER;
