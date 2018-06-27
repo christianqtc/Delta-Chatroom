@@ -1,46 +1,145 @@
 
+import java.io.IOException;
 import java.net.*;
-import org.java_websocket.WebSocket;
-import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.server.WebSocketServer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 
-public class Chatserver extends WebSocketServer 
+public class Chatserver
 {
-    @Override
-    // Called when the Server gets a new client connection.
-    public void onOpen(WebSocket ws, ClientHandshake ch) {
-    }
-
-    @Override
-    // Called when a client's connection times out.
-    public void onClose(WebSocket ws, int i, String string, boolean bln) {
-    }
-
-    @Override
-    // Called when we recieve data from a client.
-    public void onMessage(WebSocket ws, String string) {
-    }
-
-    @Override
-    // Self-explanatory.
-    public void onError(WebSocket ws, Exception e) {
-        e.printStackTrace();
+    private final ServerSocket gServerSocket;
+    
+    private final List<Client> gClients = new ArrayList<>();
+    protected static final Logger gLogger = Logger.getLogger("com.cs4310delta");
+    
+    public void onStart()
+    {
+        System.out.println( "The server has been started." );
     }
     
-    @Override
-    // Called on start up.
-    public void onStart() {
-        System.out.println( "The chat server has been started." );
+    public synchronized void onOpen( Client client )
+    {
+        gClients.add( client );
+        
+        client.log( "Connected to the server." );
     }
     
-    public Chatserver(String hostname, int port) {
-        super( new InetSocketAddress( hostname, port ) );
+    public synchronized void onMessage( Client client, String data )
+    {
+        System.out.println( "Recieved message: " + data );
+    }
+    
+    public synchronized void onClose( Client client, int statusCode, String reason )
+    {
+        client.gThread.interrupt(); // Stop the client thread.
+        gClients.remove( client );
+        
+        client.log( "Disconnected from the server. Reason: " + reason + "(" + statusCode + ")" );
+    }
+    
+    public Client findClientByIP( String address )
+    {
+        try
+        {
+            InetAddress addr = InetAddress.getByName( address );
+            return findClientByIP( addr );
+        }
+        catch (UnknownHostException e )
+        {
+            // Silent.
+            return null;
+        }
+    }
+    
+    public Client findClientByIP( InetAddress address )
+    {
+        String addr = address.getHostAddress();
+        for( Client client : gClients )
+        {
+            if ( client.gAddress.equals(addr) )
+                return client;
+        }
+        return null;
+    }
+    
+    public Chatserver( InetSocketAddress address ) throws IOException
+    {
+        gServerSocket = new ServerSocket( address.getPort(), 0, address.getAddress() );
+    }
+    
+    public void run() throws IOException
+    {
+        onStart();
+        
+        while ( true )
+        {
+            Socket clientSocket = gServerSocket.accept();
+            
+            if ( findClientByIP( clientSocket.getInetAddress() ) != null )
+            {
+                // The client is already connected.
+                clientSocket.close();
+                continue;
+            }
+            
+            Client client = new Client( this, clientSocket );
+            
+            Thread clientWorkerThread = new Thread()
+            {
+                @Override
+                public void run()
+                {
+                    // The WebSocket handshake must be done first.
+                    if ( !client.ws_handshake() )
+                    {
+                        client.disconnect( "WS handshake failed." );
+                    }
+                    else
+                    {
+                        onOpen( client );
+                        
+                        while ( true )
+                        {
+                            try
+                            {
+                                String data = client.ws_readFrame();
+                                onMessage( client, data );
+                            }
+                            catch ( SocketException e )
+                            {
+                                // Silent.
+                            }
+                            catch ( Exception e )
+                            {
+                                e.printStackTrace();
+                                break;
+                            }
+                        }
+                    }
+                }
+            };
+            
+            // If set to true, this Thread will automatically exit when the
+            // main Thread stops.
+            clientWorkerThread.setDaemon(true);
+            
+            // Start the client worker thread.
+            client.gThread = clientWorkerThread;
+            clientWorkerThread.start();
+        }
     }
     
     public static void main( String[] args )
     { 
-        Chatserver server = new Chatserver( "localhost", 8000 );
-        server.run();
+        try
+        {
+            Chatserver server = new Chatserver( new InetSocketAddress( "localhost", 8000 ) );
+            server.run();
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
     }
 }
