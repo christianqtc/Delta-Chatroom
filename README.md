@@ -14,13 +14,16 @@ For the project we will implement a chat board application in Java with UI, back
 * Configuration
 * Dependencies
 * How to run tests
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-* [Learn Git](https://www.atlassian.com/git/tutorials/learn-git-with-bitbucket-cloud)
+  1. In order for packages to load correctly compilation class path must be set to highest directory. i.e. cs4310.
+
+
 
 #### Tools ####
 * [Atom](https://atom.io) (Extensible text editor with git functionality)
 * [JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 * [SourceTree](https://www.sourcetreeapp.com/)(Git management)
+* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* [Learn Git](https://www.atlassian.com/git/tutorials/learn-git-with-bitbucket-cloud)
 
 ### Delta Team Members ###
 
