@@ -1,4 +1,6 @@
 package model;
+import java.util.Scanner;
+import java.io.*;
 
 public class User{
       public int id;
@@ -24,5 +26,30 @@ public class User{
                     "\"password\": \""+password+"\"\n"+
                  "}\n";
           return json;
-    }
+      }
+      public void addToDB(){
+            //Users.dat must have at least one user before using this function or else json will be corrupted.
+            //Create file object
+            File userDB = new File("../Database/Users.dat");
+            //Create Scanner to grab everything before the closing bracket
+            Scanner scanner = null;
+            try {
+			scanner = new Scanner(userDB).useDelimiter("]");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+            //Create string with appeneded new user
+            String appended = scanner.next()+","+toJson();
+            //Append last part of json file
+            while(scanner.hasNextLine()){appended+=scanner.nextLine();}
+            //Write completed json to file
+            FileWriter newUserDB = null;
+		try {
+			newUserDB = new FileWriter(userDB);
+                  newUserDB.write(appended);
+                  newUserDB.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+      }
 }
