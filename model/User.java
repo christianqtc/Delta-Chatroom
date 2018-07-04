@@ -42,6 +42,7 @@ public class User{
             String appended = scanner.next()+","+toJson();
             //Append last part of json file
             while(scanner.hasNextLine()){appended+=scanner.nextLine();}
+            if(scanner!=null){scanner.close();}
             //Write completed json to file
             FileWriter newUserDB = null;
 		try {
