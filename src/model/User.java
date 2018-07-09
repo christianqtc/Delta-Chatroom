@@ -1,4 +1,4 @@
-package model;
+package src.model;
 import java.util.Scanner;
 import java.io.*;
 
@@ -15,6 +15,9 @@ public class User{
             this.lastName=lastName;
             this.userName=userName;
             this.password=password;
+      }
+      public User(String userName){
+            //create user from data in database based on username
       }
       public String toJson(){
             String json =
