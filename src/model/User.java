@@ -1,24 +1,58 @@
 package src.model;
 import java.util.Scanner;
+import java.util.NoSuchElementException;
 import java.io.*;
 
 public class User{
-      public int id;
+      public Integer id;
       public String firstName;
       public String lastName;
       public String userName;
       public String password;
-
-      public User(int id,String firstName,String lastName,String userName,String password){
+      //Constructors
+      public User(Integer id,String firstName,String lastName,String userName,String password){
             this.id=id;
             this.firstName=firstName;
             this.lastName=lastName;
             this.userName=userName;
             this.password=password;
+            return;
       }
+      //Constructor based on userName
+      //Semi Functional only populates user.userName 
       public User(String userName){
-            //create user from data in database based on username
+            File userDB = new File("../Database/Users.dat");
+            Scanner scanner = null;
+            try {
+			scanner = new Scanner(userDB);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+            String uitter = null;
+            Integer iitter = 0;
+            while(!userName.equals(uitter)){
+                  scanner.useDelimiter("userName");
+                  if (scanner.hasNext()){scanner.next();}
+                  scanner.useDelimiter("\"");
+                  if (scanner.hasNext()){scanner.next();}
+                  if (scanner.hasNext()){scanner.next();}
+                  try {
+                        uitter = scanner.next();
+                  }
+                  catch (NoSuchElementException e){
+                        System.out.println("No User: "+userName);
+                        this.id=null;
+                        this.firstName=null;
+                        this.lastName=null;
+                        this.userName=null;
+                        this.password=null;
+                        return;
+                  }
+                  this.userName = uitter;
+
+            }
       }
+
       public String toJson(){
             String json =
                  "{\n"+
@@ -55,5 +89,6 @@ public class User{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+            return;
       }
 }
