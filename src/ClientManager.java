@@ -7,8 +7,7 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-public class Chatserver
+public class ClientManager
 {
     private final ServerSocket gServerSocket;
     
@@ -25,24 +24,24 @@ public class Chatserver
         LOGGER.addHandler(handler);
     }
     
-    public void onStart()
+    private void onStart()
     {
         System.out.println( "The server has been started." );
     }
     
-    public synchronized void onOpen( Client client )
+    synchronized void onOpen( Client client )
     {
         gClients.add( client );
         
         client.log( "Connected to the server." );
     }
     
-    public synchronized void onMessage( Client client, String data )
+    synchronized void onMessage( Client client, String data )
     {
         System.out.println( "Recieved message: " + data );
     }
     
-    public synchronized void onClose( Client client, int statusCode, String reason )
+    synchronized void onClose( Client client, int statusCode, String reason )
     {
         client.gThread.interrupt(); // Stop the client thread.
         gClients.remove( client );
@@ -66,16 +65,15 @@ public class Chatserver
     
     public Client findClientByIP( InetAddress address )
     {
-        String addr = address.getHostAddress();
         for( Client client : gClients )
         {
-            if ( client.gAddress.equals(addr) )
+            if ( client.getAddress().equals(address) )
                 return client;
         }
         return null;
     }
     
-    public Chatserver( InetSocketAddress address ) throws IOException
+    public ClientManager( InetSocketAddress address ) throws IOException
     {
         gServerSocket = new ServerSocket( address.getPort(), 0, address.getAddress() );
     }
@@ -133,7 +131,7 @@ public class Chatserver
             };
             
             // If set to true, this Thread will automatically exit when the
-            // main Thread stops.
+            // main application Thread stops.
             clientWorkerThread.setDaemon(true);
             
             // Start the client worker thread.
@@ -146,7 +144,7 @@ public class Chatserver
     {
         try
         {
-            Chatserver server = new Chatserver( new InetSocketAddress( "localhost", 8000 ) );
+            ClientManager server = new ClientManager( new InetSocketAddress( "localhost", 8000 ) );
             server.run();
         }
         catch ( IOException e )
