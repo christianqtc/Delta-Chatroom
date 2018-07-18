@@ -1,4 +1,4 @@
-package com.cs4310;
+package cs4310;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
