@@ -8,7 +8,7 @@ public class User{
       public String lastName;
       public String userName;
       public String password;
-      //Constructors
+      //Constructor
       public User(String firstName,String lastName,String userName,String password){
             this.userName=userName;
             this.firstName=firstName;
@@ -73,6 +73,13 @@ public class User{
             uitter = scanner.next();
             this.password = uitter;
       }
+      public User(){
+            this.userName=null;
+            this.firstName=null;
+            this.lastName=null;
+            this.password=null;
+            return;
+      }
       public String toJson(){
             String json =
                  "{\n"+
@@ -83,6 +90,7 @@ public class User{
                  "}\n";
           return json;
       }
+
       public void addToDB(){
             //Users.dat must have at least one user before using this function or else json will be corrupted.
             //Create file object
