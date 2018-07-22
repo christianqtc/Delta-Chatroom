@@ -1,25 +1,22 @@
-package src.model;
+package model;
 import java.util.Scanner;
 import java.util.NoSuchElementException;
 import java.io.*;
 
 public class User{
-      public Integer id;
       public String firstName;
       public String lastName;
       public String userName;
       public String password;
       //Constructors
-      public User(Integer id,String firstName,String lastName,String userName,String password){
-            this.id=id;
+      public User(String firstName,String lastName,String userName,String password){
+            this.userName=userName;
             this.firstName=firstName;
             this.lastName=lastName;
-            this.userName=userName;
             this.password=password;
             return;
       }
       //Constructor based on userName
-      //Semi Functional only populates user.userName 
       public User(String userName){
             File userDB = new File("../Database/Users.dat");
             Scanner scanner = null;
@@ -29,7 +26,7 @@ public class User{
 			e.printStackTrace();
 		}
             String uitter = null;
-            Integer iitter = 0;
+            //loop to find username
             while(!userName.equals(uitter)){
                   scanner.useDelimiter("userName");
                   if (scanner.hasNext()){scanner.next();}
@@ -41,25 +38,47 @@ public class User{
                   }
                   catch (NoSuchElementException e){
                         System.out.println("No User: "+userName);
-                        this.id=null;
+                        this.userName=null;
                         this.firstName=null;
                         this.lastName=null;
-                        this.userName=null;
                         this.password=null;
                         return;
                   }
                   this.userName = uitter;
-
             }
-      }
+            //Gets firstName
+            scanner.useDelimiter("firstName");
+            if (scanner.hasNext()){scanner.next();}
+            scanner.useDelimiter("\"");
+            if (scanner.hasNext()){scanner.next();}
+            if (scanner.hasNext()){scanner.next();}
+            uitter = scanner.next();
+            this.firstName = uitter;
 
+            //Gets lastName
+            scanner.useDelimiter("lastName");
+            if (scanner.hasNext()){scanner.next();}
+            scanner.useDelimiter("\"");
+            if (scanner.hasNext()){scanner.next();}
+            if (scanner.hasNext()){scanner.next();}
+            uitter = scanner.next();
+            this.lastName = uitter;
+
+            //Gets password
+            scanner.useDelimiter("password");
+            if (scanner.hasNext()){scanner.next();}
+            scanner.useDelimiter("\"");
+            if (scanner.hasNext()){scanner.next();}
+            if (scanner.hasNext()){scanner.next();}
+            uitter = scanner.next();
+            this.password = uitter;
+      }
       public String toJson(){
             String json =
                  "{\n"+
-                    "\"id\": \""+id+"\",\n"+
+                    "\"userName\": \""+userName+"\",\n"+
                     "\"firstName\": \""+firstName+"\",\n"+
                     "\"lastName\": \""+lastName+"\",\n"+
-                    "\"userName\": \""+userName+"\",\n"+
                     "\"password\": \""+password+"\"\n"+
                  "}\n";
           return json;
