@@ -1,3 +1,5 @@
+package cs4310;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -8,27 +10,32 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
+import src.model.User;
 
 public class Client 
 {
-    public final String gAddress;
-    final Chatserver gServer;
+    final ClientManager gServer;
     final Socket gSocket;
     Thread gThread;
     
-    public Client( Chatserver server, Socket skt )
+    User gUserModel;
+    
+    public Client( ClientManager server, Socket socket )
     {
         gServer = server;
-        gSocket = skt;
-        
-        gAddress = gSocket.getInetAddress().getHostAddress();
+        gSocket = socket;
         
         ws_init();
     }
     
-    public String getAddress()
+    public InetAddress getAddress()
     {
-        return gAddress;
+        return gSocket.getInetAddress();
+    }
+    
+    public User getUserModel()
+    {
+        return gUserModel;
     }
     
     public void send( String data )
@@ -64,7 +71,7 @@ public class Client
     
     public void log( Level level, String msg )
     {
-        Chatserver.LOGGER.log( level, "{0}: {1}", new Object[] { gAddress, msg }  );
+        ClientManager.LOGGER.log( level, "{0}: {1}", new Object[] { getAddress().toString(), msg }  );
     }
     
     /*
@@ -98,7 +105,7 @@ public class Client
         g_wsSentCloseSignal = false;
     }
     
-    protected boolean ws_isControlOpcode( byte opcode )
+    private boolean ws_isControlOpcode( byte opcode )
     {
         return ( opcode & 0x08 ) != 0;
     }
@@ -109,7 +116,7 @@ public class Client
     }
     
     // Perform the WebSocket handshake. True if successful, false otherwise.
-    protected boolean ws_handshake()
+    boolean ws_handshake()
     {
         assert( gSocket != null );
         
@@ -217,11 +224,11 @@ public class Client
     }
     
     // Read states for ws_readDataFrame()
-    private static final int FRAME_READSTATE_TYPEINFO = 0;
-    private static final int FRAME_READSTATE_PAYLOADINFO = 1;
-    private static final int FRAME_READSTATE_EXTPAYLOADLEN = 2;
-    private static final int FRAME_READSTATE_MASK = 3;
-    private static final int FRAME_READSTATE_PAYLOAD = 4;
+    private static final int WS_FRAME_READSTATE_TYPEINFO = 0;
+    private static final int WS_FRAME_READSTATE_PAYLOADINFO = 1;
+    private static final int WS_FRAME_READSTATE_EXTPAYLOADLEN = 2;
+    private static final int WS_FRAME_READSTATE_MASK = 3;
+    private static final int WS_FRAME_READSTATE_PAYLOAD = 4;
     
     protected void ws_sendDataFrame( byte opCode, byte[] payload )
     {
@@ -335,7 +342,7 @@ public class Client
         
         while ( !lastFrame && !gSocket.isClosed() )
         {
-            int frameReadState = FRAME_READSTATE_TYPEINFO;
+            int frameReadState = WS_FRAME_READSTATE_TYPEINFO;
             
             boolean controlFrame = false;
             boolean masked = false;
@@ -361,7 +368,7 @@ public class Client
                 
                 switch (frameReadState) 
                 {
-                    case FRAME_READSTATE_TYPEINFO:
+                    case WS_FRAME_READSTATE_TYPEINFO:
                     {
                         byte _opCode = (byte)(( b & 0x0F ));
                         
@@ -387,10 +394,10 @@ public class Client
                             ws_log( "OPCODE: " + opCode );
                         }
                         
-                        frameReadState = FRAME_READSTATE_PAYLOADINFO;
+                        frameReadState = WS_FRAME_READSTATE_PAYLOADINFO;
                         break;
                     }
-                    case FRAME_READSTATE_PAYLOADINFO:
+                    case WS_FRAME_READSTATE_PAYLOADINFO:
                     {
                         masked = (b >>> 7) != 0;
                         ws_log( "MASKED: " + masked );
@@ -402,13 +409,13 @@ public class Client
                             
                             if ( masked )
                             {
-                                frameReadState = FRAME_READSTATE_MASK;
+                                frameReadState = WS_FRAME_READSTATE_MASK;
                                 readBytePos = 0;
                                 bytesToRead = 4;
                             }
                             else
                             {
-                                frameReadState = FRAME_READSTATE_PAYLOAD;
+                                frameReadState = WS_FRAME_READSTATE_PAYLOAD;
                                 readBytePos = 0;
                                 bytesToRead = payloadLen;
                             }
@@ -416,20 +423,20 @@ public class Client
                         else if ( payloadLen == 126 )
                         {
                             payloadLen = 0L;
-                            frameReadState = FRAME_READSTATE_EXTPAYLOADLEN;
+                            frameReadState = WS_FRAME_READSTATE_EXTPAYLOADLEN;
                             readBytePos = 0;
                             bytesToRead = 2; // read next 2 bytes for payload length
                         }
                         else if ( payloadLen == 127 )
                         {
                             payloadLen = 0L;
-                            frameReadState = FRAME_READSTATE_EXTPAYLOADLEN;
+                            frameReadState = WS_FRAME_READSTATE_EXTPAYLOADLEN;
                             readBytePos = 0;
                             bytesToRead = 8; // read next 8 bytes for payload length
                         }   
                         break;
                     }
-                    case FRAME_READSTATE_EXTPAYLOADLEN:
+                    case WS_FRAME_READSTATE_EXTPAYLOADLEN:
                     {
                         payloadLen <<= 8;
                         payloadLen |= Byte.toUnsignedInt(b);
@@ -441,20 +448,20 @@ public class Client
                             
                             if ( masked )
                             {
-                                frameReadState = FRAME_READSTATE_MASK;
+                                frameReadState = WS_FRAME_READSTATE_MASK;
                                 readBytePos = 0;
                                 bytesToRead = 4;
                             }
                             else
                             {
-                                frameReadState = FRAME_READSTATE_PAYLOAD;
+                                frameReadState = WS_FRAME_READSTATE_PAYLOAD;
                                 readBytePos = 0;
                                 bytesToRead = payloadLen;
                             }
                         }
                         break;
                     }
-                    case FRAME_READSTATE_MASK:
+                    case WS_FRAME_READSTATE_MASK:
                     {
                         maskKey <<= 8;
                         maskKey |= Byte.toUnsignedInt(b);
@@ -464,14 +471,14 @@ public class Client
                         {
                             ws_log( "MASK: " + String.format("%"+bytesToRead*8L+"s", Long.toBinaryString( maskKey ) ).replace(' ', '0') );
                             
-                            frameReadState = FRAME_READSTATE_PAYLOAD;
+                            frameReadState = WS_FRAME_READSTATE_PAYLOAD;
                             readBytePos = 0;
                             bytesToRead = payloadLen;
                         }   
                         
                         break;
                     }
-                    case FRAME_READSTATE_PAYLOAD:
+                    case WS_FRAME_READSTATE_PAYLOAD:
                     {
                         byte d = b;
                         if ( masked )
