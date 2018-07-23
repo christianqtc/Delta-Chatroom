@@ -10,7 +10,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
-import src.model.User;
+import cs4310.model.User;
 
 public class Client 
 {

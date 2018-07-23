@@ -1,4 +1,4 @@
-package model;
+package cs4310.model;
 import java.util.Scanner;
 import java.util.NoSuchElementException;
 import java.io.*;
