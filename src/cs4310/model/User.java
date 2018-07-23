@@ -2,6 +2,7 @@ package cs4310.model;
 import java.util.Scanner;
 import java.util.NoSuchElementException;
 import java.io.*;
+import java.io.File;
 
 public class User{
       public String firstName;
@@ -18,7 +19,7 @@ public class User{
       }
       //Constructor based on userName
       public User(String userName){
-            File userDB = new File("../Database/Users.dat");
+            File userDB = new File("Database/Users.dat");
             Scanner scanner = null;
             try {
 			scanner = new Scanner(userDB);
@@ -94,18 +95,21 @@ public class User{
       public void addToDB(){
             //Users.dat must have at least one user before using this function or else json will be corrupted.
             //Create file object
-            File userDB = new File("../Database/Users.dat");
+            File userDB = new File("Database/Users.dat");
             //Create Scanner to grab everything before the closing bracket
             Scanner scanner = null;
             try {
-			scanner = new Scanner(userDB).useDelimiter("]");
+			scanner = new Scanner(userDB).useDelimiter("\\{");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
             //Create string with appeneded new user
-            String appended = scanner.next()+","+toJson();
+            String appended = scanner.next()+toJson()+",";
             //Append last part of json file
-            while(scanner.hasNextLine()){appended+=scanner.nextLine();}
+            while(scanner.hasNextLine()){
+                  appended+=scanner.nextLine();
+                  appended+="\n";
+            }
             if(scanner!=null){scanner.close();}
             //Write completed json to file
             FileWriter newUserDB = null;
