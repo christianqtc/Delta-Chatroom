@@ -5,4 +5,10 @@
 "lastName": "Rivera",
 "password": "wordpass"
 }
+,{
+"userName": "tiffo",
+"firstName": "Tiffany",
+"lastName": "Jones",
+"password": "wordpass"
+}
 ]
