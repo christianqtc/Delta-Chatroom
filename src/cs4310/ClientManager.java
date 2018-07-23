@@ -145,7 +145,7 @@ public class ClientManager
     {
         try
         {
-            ClientManager server = new ClientManager( new InetSocketAddress( "localhost", 8000 ) );
+            ClientManager server = new ClientManager( new InetSocketAddress( args[0], 8000 ) );
             server.run();
         }
         catch ( IOException e )
