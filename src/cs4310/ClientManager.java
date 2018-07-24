@@ -1,5 +1,10 @@
 package cs4310;
 
+import cs4310.model.Identify;
+import cs4310.model.LoginPack;
+import cs4310.model.LoginResultPack;
+import cs4310.model.MessagePack;
+import cs4310.model.User;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
@@ -40,6 +45,62 @@ public class ClientManager
     synchronized void onMessage( Client client, String data )
     {
         System.out.println( "Recieved message: " + data );
+        
+        String type = Identify.type(data);
+        switch( type )
+        {
+            case "login":
+            {
+                if ( client.getUserModel() == null )
+                {
+                    // The Client hasn't been authenticated yet.
+                    LoginPack packet = new LoginPack( data );
+                    if ( packet.userName != null && packet.password != null )
+                    {
+                        // Try to find the user in the Database.
+                        User user = new User( packet.userName );
+                        if ( user.userName != null )
+                        {
+                            // Found it.
+                            client.setUserModel( user );
+                            
+                            // Send success response.
+                            LoginResultPack responsePacket = new LoginResultPack();
+                            responsePacket.type = "loginresponse";
+                            responsePacket.result = true;
+                            
+                            client.send( responsePacket.toJson() );
+                            break;
+                        }
+                    }
+                }
+                
+                // Send failed response.
+                LoginResultPack responsePacket = new LoginResultPack();
+                responsePacket.type = "loginresponse";
+                responsePacket.result = false;
+                
+                client.send( responsePacket.toJson() );
+                
+                break;
+            }
+            case "message":
+            {
+                if ( client.getUserModel() != null ) // Always check if client is authenticated.
+                {
+                    MessagePack packet = new MessagePack( data );
+                    if ( packet.author != null && packet.message != null && packet.message.length() > 0 )
+                    {
+                        final String json = packet.toJson();
+                        gClients.forEach((c) -> {
+                            c.send( json );
+                        });
+                    }
+                }
+                
+                break;
+            }
+        }
     }
     
     synchronized void onClose( Client client, int statusCode, String reason )
@@ -48,6 +109,7 @@ public class ClientManager
         gClients.remove( client );
         
         client.log( "Disconnected from the server. Reason: " + reason + "(" + statusCode + ")" );
+        client.setUserModel(null);
     }
     
     public Client findClientByIP( String address )
@@ -143,9 +205,15 @@ public class ClientManager
     
     public static void main( String[] args )
     {
+        String hostName;
+        if ( args.length >= 1 )
+            hostName = args[0];
+        else
+            hostName = "localhost";
+        
         try
         {
-            ClientManager server = new ClientManager( new InetSocketAddress( args[0], 8000 ) );
+            ClientManager server = new ClientManager( new InetSocketAddress( hostName, 8000 ) );
             server.run();
         }
         catch ( IOException e )

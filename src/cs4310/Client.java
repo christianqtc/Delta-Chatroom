@@ -38,6 +38,10 @@ public class Client
         return gUserModel;
     }
     
+    void setUserModel(User user) {
+        gUserModel = user;
+    }
+    
     public void send( String data )
     {
         ws_sendDataFrame( FRAME_OPCODE_TEXT, data.getBytes() );
