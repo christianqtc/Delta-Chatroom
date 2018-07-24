@@ -66,7 +66,7 @@ public class ClientManager
                             
                             // Send success response.
                             LoginResultPack responsePacket = new LoginResultPack();
-                            responsePacket.type = "loginresponse";
+                            responsePacket.type = "loginresult";
                             responsePacket.result = true;
                             
                             client.send( responsePacket.toJson() );
@@ -77,7 +77,7 @@ public class ClientManager
                 
                 // Send failed response.
                 LoginResultPack responsePacket = new LoginResultPack();
-                responsePacket.type = "loginresponse";
+                responsePacket.type = "loginresult";
                 responsePacket.result = false;
                 
                 client.send( responsePacket.toJson() );
