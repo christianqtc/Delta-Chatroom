@@ -40,18 +40,21 @@ public class Message{
       public void addToDB(){
             //Messages.dat must have at least one record before using this function or else json will be corrupted due to a leading comma.
             //Create file object
-            File messageDB = new File("../Database/Messages.dat");
+            File messageDB = new File("Database/Messages.dat");
             //Create Scanner to grab everything before the closing bracket
             Scanner scanner = null;
             try {
-			scanner = new Scanner(messageDB).useDelimiter("]");
+			scanner = new Scanner(messageDB).useDelimiter("\\{");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
             //Create string with appeneded new message
-            String appended = scanner.next()+","+toJson();
+            String appended = scanner.next()+toJson()+",";
             //Append last part of json file
-            while(scanner.hasNextLine()){appended+=scanner.nextLine();}
+            while(scanner.hasNextLine()){
+                  appended+=scanner.nextLine();
+                  appended+="\n";
+            }
             if(scanner!=null){scanner.close();}
             //Write completed json to file
             FileWriter newMessageDB = null;
@@ -70,7 +73,7 @@ public class Message{
             int tot = to-from;
             tot+=1;
             Message[] arr = new Message [tot];
-            File messageDB = new File("../Database/Messages.dat");
+            File messageDB = new File("Database/Messages.dat");
             Scanner scanner = null;
             try {
 			scanner = new Scanner(messageDB);
