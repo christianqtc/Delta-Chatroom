@@ -4,6 +4,7 @@ import cs4310.model.Identify;
 import cs4310.model.LoginPack;
 import cs4310.model.LoginResultPack;
 import cs4310.model.MessagePack;
+import cs4310.model.RegistrationPack;
 import cs4310.model.User;
 import java.io.IOException;
 import java.net.*;
@@ -65,10 +66,7 @@ public class ClientManager
                             client.setUserModel( user );
                             
                             // Send success response.
-                            LoginResultPack responsePacket = new LoginResultPack();
-                            responsePacket.type = "loginresult";
-                            responsePacket.result = true;
-                            
+                            LoginResultPack responsePacket = new LoginResultPack( true );
                             client.send( responsePacket.toJson() );
                             break;
                         }
@@ -76,10 +74,7 @@ public class ClientManager
                 }
                 
                 // Send failed response.
-                LoginResultPack responsePacket = new LoginResultPack();
-                responsePacket.type = "loginresult";
-                responsePacket.result = false;
-                
+                LoginResultPack responsePacket = new LoginResultPack( false );
                 client.send( responsePacket.toJson() );
                 
                 break;
@@ -98,6 +93,30 @@ public class ClientManager
                     }
                 }
                 
+                break;
+            }
+            case "registration":
+            {
+                RegistrationPack packet = new RegistrationPack( data );
+                if ( packet.userName != null && packet.userName.length() > 0 && 
+                        packet.password != null && packet.password.length() > 0 )
+                {
+                    if ( new User( packet.userName ).userName == null ) // first check if user exists in DB
+                    {
+                        // Make a new User model and add to the database.
+                        User user = new User( packet );
+                        user.addToDB();
+                        
+                        // Send success response.
+                        LoginResultPack responsePacket = new LoginResultPack( true );
+                        client.send( responsePacket.toJson() );
+                        break;
+                    }
+                }
+                
+                // Send failed response.
+                LoginResultPack responsePacket = new LoginResultPack( false );
+                client.send( responsePacket.toJson() );
                 break;
             }
         }
