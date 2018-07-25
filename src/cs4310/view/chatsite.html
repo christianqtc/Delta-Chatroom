@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,13 +9,11 @@
 <p></p>
 <h1>Delta Chatroom</h1>
 <p></p>
-<br></br>
 <nav>
     <ul>
 
         <div class="dropdown">
-  <button class="menubutton"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPUAAADNCAMAAABXRsaXAAAAaVBMVEUAAAD////4+PjOzs7u7u7R0dH09PSBgYFGRka7u7taWlq6urp+fn5xcXGEhIT8/Pzc3Nw4ODjl5eUxMTFUVFQgICBgYGDHx8dnZ2ctLS2JiYlBQUEoKChERESUlJTDw8NMTEwUFBRtbW2QILMFAAADxUlEQVR4nO2d6ZKqQAxGbRDcUFER3MZl3v8h70w59gbo/UNSlS/nCb5TMwWSpNMjg8iIOwALao1D2zpfFOeRHM7FIv9o3VTcMQegur21zo7cAQfikvZbL7nDDch3j/X4wZ1sUB7jLustd6zB2batx9yZCBi3rPfckQh4xNaSH2SO79A6485DRBpY77jjEHHxrRvuNGQ0nvWcOwwZlbNOuLMQklvrBXcUQhbWesIdhZDCWk+5oxByttbcSUhRaxzUGgdrfedOQsjdWp+4oxCystY37iiEzKz1mjsKIWv3zXXgzkJG7X1popRSRqPMr6V8cach4hxUkEruOESUYY0U4+W1iirDZsOdiICdia0RqkhJy9rk3JkGx7X3vJ7mWtKIQptNYrqsjblyJxuQky8azipsJc5n/FJtTb/1z4u74A44AMsysuyYvEqvBzmvsc3hmrYVdd4MB7XGQa1xUGsc1BoHtcZBrXFQaxzUGge1xkGtcVBrHNQaB7XGQa1xUGsc1BoHtcZBrXFQaxza1uvbqZKzG+hRnW7rj9aZxOM+dTxeGFqXUoelN2W/tcTJ2RdFj3UudaXbk0veZS1/6VXHpi/5xz7+dqUE1hfuSARcYmvJDzLHMrRGObGYBdZyjjy8Z+dbp9xpyPA3fdXcYciYO2uEM5ovEms9445CiNv0teKOQsjEWt+5oxDyZa25k5Ci1jioNQ6Qz/Ap+Psa6bcZ5qYv9zsc85sL6Ps6RaylbLRuhlIjfbV9bD1cdrvnSaseDtr7AOhzdW76ymVff3Hs7Gka2Zvy+/rXvy8wqRs6z29mFYzQuZRDFll2TF41p7mcC5z28/+ZQcJArXFQaxzUGge1xkGtcVBrHNQaB7XGQa1xUGsc1BoHtcZBrXFQaxzUGge1xkGtcVBrHNQaB7X+I73WcuZod/W1+WxdLrlzDsCHu1O3d+6AA3F/Mz0r+Zr3vjuRE9nHm7rvv5Z/8KPjBATCzpT2vfay/72f7GJrjCPYk9Aa5cRiGVhL3cgZE5xOzbjTkOGfRJZ4sKeb2lkjbRhYW+sbdxRC3DYJjNfWk5W1vnNHIcRtieFOQopa46DWOFjrKXcSQs7WWvJmgZjCWiNt+nJbWBGqRy+8TV9z7ixkVN6XZsMdhgx/k7aR09h6zzGoIKEUU6JNXxKbem2i2xCMkbMipZ+9ia3lr7zyWj6uz7XlzjQ4HTfa/Py1Zf+T711zL+xfS36kLX3RcFYhk/rePoZbr+K5lEbij9N5PJDTnkFKZhNJ39vTySJpOeq8GQ5qjcM/Ek9sNuAF0BMAAAAASUVORK5CYII="
-      alt="menubtn" style="width:50px;height:30px;"></img></button>
+  <button class="menubutton">Menu</button>
   <div class="dropdown-content">
     <a href="#">Edit Profile</a>
     <a href="#">Contacts</a>
@@ -22,11 +21,150 @@
   </div>
 </div>
 
+    <script>
+    var socket = new WebSocket( "ws://localhost:8000/" );
+
+        // onopen is called when the WebSocket successfully establishes a connection with the server.
+        socket.onopen = function( event ) {
+            console.log( "Connection was opened!" );
+
+            // Once the connection is opened, it is safe to send data to the server through the WebSocket.
+            socket.send( "Test." );
+        };
+
+        console.log( "Attempting to connect!" );
 
 
+
+
+
+        // onmessage is called when the WebSocket receives data from the server.
+         socket.onmessage = function(event) {
+            handleMessage(event);
+        };
+
+        var datatest = {
+            data : "{\"author\" : \"Username\",\"message\" : \"Data testing.\",\"posted\" : \"time.\",\"edited\" : null,\"type\" : \"message\"}"
+        };
+
+        var loginresulttest = {
+            data : "{\"result\" :  true, \"type\" : \"loginresult\" }"
+        };
+
+         function handleMessage( event ) {
+            var chatz = document.getElementById("chatbox").contentDocument;
+            var received = JSON.parse(event.data);
+            var username = received.author;
+            var text = "";
+            var msg = received.message;
+            var time = received.posted;
+            var timeStamp = Date.now();
+            var jsontype = received.type;
+            var result = received.result;
+
+            if (jsontype == "message")
+            {
+                console.log("this is a message!");
+
+
+                text = "(" + timeStamp + ") <b>" + username + "</b>: " + msg + "<br>";
+
+
+
+
+                if (text.length) {
+                    chatz.write(text);
+                    document.getElementById("chatbox").contentWindow;
+                }
+            }
+            else
+            {
+                console.log("this is a login result!");
+
+                if (result = true)
+                {
+                    createCookie(result);
+                }
+            }
+
+            console.log( "Recieved a message: " + event.data );
+        };
+
+    function test()
+    {
+        handleMessage(loginresulttest);
+    };
+
+
+
+
+
+    function sendmessage()
+    {
+        var msgjson = {
+            "author" : "user",
+            "message" : document.getElementById("msgBox").value,
+            "posted" : Date.now(),
+            "edited" : null,
+            "type" : "message"
+        };
+
+        socket.send(JSON.stringify(msgjson));
+
+    };
+
+    function displaymessage()
+    {
+        sendmessage()
+    }
+
+
+    function createCookie(username)
+    {
+        var d = new Date();
+        d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
+        document.cookie = "loginresult=true; path=/";
+        alert("Cookies test... set to name= " + username);
+        console.log("cookies created..");
+    }
+
+    </script>
+
+    <button type="button" onclick="connect()">Connect!</button>
+
+    <button type="button" onclick="test()">Testing!</button>
+
+<br>
+<br>
+
+
+  <table border="0" width="100%">
+  <tr height="100%">
+  <td width="120px" align="top" border="1" height="100%">
+  <div id="userlistbox" style="border: 1px solid black; width:100%; height:100%;"></div>
+  </td>
+  <td>
+  <iframe width="100%" height="400px" id="chatbox""></iframe>
+  <tr>
+  <td>&nbsp;</td>
+  <td>
+
+<br>
+<br>
+
+    <textarea id="msgBox" rows="4" cols="50">Enter text here...</textarea>
+
+
+
+    <button type="button" onclick="sendmessage()">Send!</button>
+
+
+
+
+    <a href="https://www.google.com/" id="logoutbutton">Logout</a>
     </ul>
 </nav>
-    <a href="https://www.google.com/" id="logoutbutton" style="margin-left:600px">Logout</a>
+
 <br>
 
     <div class="chatbox">
@@ -114,7 +252,7 @@ background-color: #f2f2f2;
 </table>
 
 <div class="chattext">
-            <textarea cols="90" rows="5"></textarea>
+            <textarea></textarea>
             <button>Send</button>
         </div>
 </body>
