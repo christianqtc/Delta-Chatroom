@@ -29,6 +29,12 @@
         socket.onopen = function( event ) {
             console.log( "Connection was opened!" );
 
+            var reqmsgs =
+            {
+                type: "messagerequest"
+            };
+            socket.send(JSON.stringify(reqmsgs));
+
             // Once the connection is opened, it is safe to send data to the server through the WebSocket.
             socket.send( "Test." );
         };
@@ -71,6 +77,7 @@
             var msg = received.message;
             var time = received.posted;
             var timeStamp = Date.now();
+            var d = Date(timeStamp);
             var jsontype = received.type;
             var result = received.result;
 
@@ -79,7 +86,7 @@
                 console.log("this is a message!");
 
 
-                text = "(" + timeStamp + ") <b>" + username + "</b>: " + msg + "<br>";
+                text = "(" + d.toString() + ") <b>" + username + "</b>: " + msg + "<br>";
 
 
 
@@ -148,9 +155,14 @@
     {
         var d = new Date();
         d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
-        document.cookie = "loginresult=true; path=/";
+        document.cookie = "username=CCAL22; loginresult=true; path=/";
         alert("Cookies test... set to name= " + username);
         console.log("cookies created..");
+    }
+
+    function deleteCookie()
+    {
+        document.cookie = "username=; expires=Thu, 22 Feb 1990 12:00:00 UTC; path=/";
     }
 
     </script>
@@ -187,7 +199,7 @@
 
 
 
-    <a href="https://www.google.com/" id="logoutbutton">Logout</a>
+    <a href="" id="logoutbutton" onclick="deleteCookie()"style="float: right;">Logout</a>
     </ul>
 </nav>
 
