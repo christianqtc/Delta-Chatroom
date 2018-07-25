@@ -3,6 +3,7 @@ package cs4310;
 import cs4310.model.Identify;
 import cs4310.model.LoginPack;
 import cs4310.model.LoginResultPack;
+import cs4310.model.Message;
 import cs4310.model.MessagePack;
 import cs4310.model.RegistrationPack;
 import cs4310.model.User;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -118,6 +120,24 @@ public class ClientManager
                 LoginResultPack responsePacket = new LoginResultPack( false );
                 client.send( responsePacket.toJson() );
                 break;
+            }
+            case "messagerequest":
+            {
+                Message[] messages = Message.history(0, 49);
+                Stack<Message> stack = new Stack<>();
+                for ( Message m : messages )
+                {
+                    if ( m.author == null )
+                        break;
+                    
+                    stack.push(m);
+                }
+                
+                while ( !stack.empty() )
+                {
+                    Message message = stack.pop();
+                    client.send( message.toJson() );
+                }
             }
         }
     }
