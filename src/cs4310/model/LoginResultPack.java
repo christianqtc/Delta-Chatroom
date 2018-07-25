@@ -4,9 +4,9 @@ import java.io.*;
 public class LoginResultPack{
       public boolean result;
       public String type;
-      public LoginPack(boolean res){
+      public LoginResultPack(boolean res){
             this.result = res;
-            this.result = "loginresult"
+            this.type = "loginresult";
       }
 
       public String toJson(){
