@@ -1,20 +1,36 @@
 package cs4310.model;
+import cs4310.model.RegistrationPack;
 import java.util.Scanner;
 import java.util.NoSuchElementException;
 import java.io.*;
 import java.io.File;
 
 public class User{
+      public String userName;
       public String firstName;
       public String lastName;
-      public String userName;
       public String password;
-      //Constructor
+      //Default
+      public User(){
+            this.userName=null;
+            this.firstName=null;
+            this.lastName=null;
+            this.password=null;
+            return;
+      }
+      //Base constructor
       public User(String firstName,String lastName,String userName,String password){
             this.userName=userName;
             this.firstName=firstName;
             this.lastName=lastName;
             this.password=password;
+            return;
+      }
+      public User(RegistrationPack packet){
+            this.userName=packet.userName;
+            this.firstName=packet.firstName;
+            this.lastName=packet.lastName;
+            this.password=packet.password;
             return;
       }
       //Constructor based on userName
@@ -74,13 +90,7 @@ public class User{
             uitter = scanner.next();
             this.password = uitter;
       }
-      public User(){
-            this.userName=null;
-            this.firstName=null;
-            this.lastName=null;
-            this.password=null;
-            return;
-      }
+
       public String toJson(){
             String json =
                  "{\n"+
