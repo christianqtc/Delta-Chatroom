@@ -2,6 +2,7 @@ package cs4310.model;
 import java.util.Scanner;
 import java.util.NoSuchElementException;
 import java.io.*;
+import cs4310.model.MessagePack;
 
 public class Message{
       public String author;
@@ -9,14 +10,6 @@ public class Message{
       public String posted;
       public String edited;
 
-      //Constructor
-      public Message(String author,String message,String posted,String edited){
-            this.author = author;
-            this.message = message;
-            this.posted = posted;
-            this.edited = edited;
-            return;
-      }
       //Default Constructor
       public Message(){
             this.author = null;
@@ -25,6 +18,23 @@ public class Message{
             this.edited = null;
             return;
       }
+      public Message(MessagePack packets){
+            this.author = packets.author;
+            this.message = packets.message;
+            this.posted = packets.posted;
+            this.edited = packets.edited;
+            return;
+      }
+
+      //Base Constructor
+      public Message(String author,String message,String posted,String edited){
+            this.author = author;
+            this.message = message;
+            this.posted = posted;
+            this.edited = edited;
+            return;
+      }
+
 
       public String toJson(){
             String json =
