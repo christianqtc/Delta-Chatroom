@@ -62,7 +62,7 @@ public class ClientManager
                     {
                         // Try to find the user in the Database.
                         User user = new User( packet.userName );
-                        if ( user.userName != null )
+                        if ( user.userName != null && user.password.equals(packet.password) )
                         {
                             // Found it.
                             client.setUserModel( user );
@@ -103,7 +103,8 @@ public class ClientManager
                 if ( packet.userName != null && packet.userName.length() > 0 && 
                         packet.password != null && packet.password.length() > 0 )
                 {
-                    if ( new User( packet.userName ).userName == null ) // first check if user exists in DB
+                    User query = new User( packet.userName );
+                    if ( query.userName == null ) // first check if user exists in DB
                     {
                         // Make a new User model and add to the database.
                         User user = new User( packet );
@@ -113,6 +114,18 @@ public class ClientManager
                         LoginResultPack responsePacket = new LoginResultPack( true );
                         client.send( responsePacket.toJson() );
                         break;
+                    }
+                    else
+                    {
+                        if ( query.password.equals( packet.password ) )
+                        {
+                            // TODO: Edit details in database.
+                            
+                            // Send success response.
+                            LoginResultPack responsePacket = new LoginResultPack( true );
+                            client.send( responsePacket.toJson() );
+                            break;
+                        }
                     }
                 }
                 
