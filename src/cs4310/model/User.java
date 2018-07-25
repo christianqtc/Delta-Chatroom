@@ -1,14 +1,24 @@
 package cs4310.model;
+import cs4310.model.RegistrationPack;
 import java.util.Scanner;
 import java.util.NoSuchElementException;
 import java.io.*;
+import java.io.File;
 
 public class User{
+      public String userName;
       public String firstName;
       public String lastName;
-      public String userName;
       public String password;
-      //Constructor
+      //Default
+      public User(){
+            this.userName=null;
+            this.firstName=null;
+            this.lastName=null;
+            this.password=null;
+            return;
+      }
+      //Base constructor
       public User(String firstName,String lastName,String userName,String password){
             this.userName=userName;
             this.firstName=firstName;
@@ -16,9 +26,16 @@ public class User{
             this.password=password;
             return;
       }
+      public User(RegistrationPack packet){
+            this.userName=packet.userName;
+            this.firstName=packet.firstName;
+            this.lastName=packet.lastName;
+            this.password=packet.password;
+            return;
+      }
       //Constructor based on userName
       public User(String userName){
-            File userDB = new File("../Database/Users.dat");
+            File userDB = new File("Database/Users.dat");
             Scanner scanner = null;
             try {
 			scanner = new Scanner(userDB);
@@ -73,13 +90,7 @@ public class User{
             uitter = scanner.next();
             this.password = uitter;
       }
-      public User(){
-            this.userName=null;
-            this.firstName=null;
-            this.lastName=null;
-            this.password=null;
-            return;
-      }
+
       public String toJson(){
             String json =
                  "{\n"+
@@ -94,18 +105,21 @@ public class User{
       public void addToDB(){
             //Users.dat must have at least one user before using this function or else json will be corrupted.
             //Create file object
-            File userDB = new File("../Database/Users.dat");
+            File userDB = new File("Database/Users.dat");
             //Create Scanner to grab everything before the closing bracket
             Scanner scanner = null;
             try {
-			scanner = new Scanner(userDB).useDelimiter("]");
+			scanner = new Scanner(userDB).useDelimiter("\\{");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
             //Create string with appeneded new user
-            String appended = scanner.next()+","+toJson();
+            String appended = scanner.next()+toJson()+",";
             //Append last part of json file
-            while(scanner.hasNextLine()){appended+=scanner.nextLine();}
+            while(scanner.hasNextLine()){
+                  appended+=scanner.nextLine();
+                  appended+="\n";
+            }
             if(scanner!=null){scanner.close();}
             //Write completed json to file
             FileWriter newUserDB = null;

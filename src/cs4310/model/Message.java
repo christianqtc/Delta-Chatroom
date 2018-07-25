@@ -2,6 +2,7 @@ package cs4310.model;
 import java.util.Scanner;
 import java.util.NoSuchElementException;
 import java.io.*;
+import cs4310.model.MessagePack;
 
 public class Message{
       public String author;
@@ -9,14 +10,6 @@ public class Message{
       public String posted;
       public String edited;
 
-      //Constructor
-      public Message(String author,String message,String posted,String edited){
-            this.author = author;
-            this.message = message;
-            this.posted = posted;
-            this.edited = edited;
-            return;
-      }
       //Default Constructor
       public Message(){
             this.author = null;
@@ -25,6 +18,23 @@ public class Message{
             this.edited = null;
             return;
       }
+      public Message(MessagePack packets){
+            this.author = packets.author;
+            this.message = packets.message;
+            this.posted = packets.posted;
+            this.edited = packets.edited;
+            return;
+      }
+
+      //Base Constructor
+      public Message(String author,String message,String posted,String edited){
+            this.author = author;
+            this.message = message;
+            this.posted = posted;
+            this.edited = edited;
+            return;
+      }
+
 
       public String toJson(){
             String json =
@@ -40,18 +50,21 @@ public class Message{
       public void addToDB(){
             //Messages.dat must have at least one record before using this function or else json will be corrupted due to a leading comma.
             //Create file object
-            File messageDB = new File("../Database/Messages.dat");
+            File messageDB = new File("Database/Messages.dat");
             //Create Scanner to grab everything before the closing bracket
             Scanner scanner = null;
             try {
-			scanner = new Scanner(messageDB).useDelimiter("]");
+			scanner = new Scanner(messageDB).useDelimiter("\\{");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
             //Create string with appeneded new message
-            String appended = scanner.next()+","+toJson();
+            String appended = scanner.next()+toJson()+",";
             //Append last part of json file
-            while(scanner.hasNextLine()){appended+=scanner.nextLine();}
+            while(scanner.hasNextLine()){
+                  appended+=scanner.nextLine();
+                  appended+="\n";
+            }
             if(scanner!=null){scanner.close();}
             //Write completed json to file
             FileWriter newMessageDB = null;
@@ -70,7 +83,7 @@ public class Message{
             int tot = to-from;
             tot+=1;
             Message[] arr = new Message [tot];
-            File messageDB = new File("../Database/Messages.dat");
+            File messageDB = new File("Database/Messages.dat");
             Scanner scanner = null;
             try {
 			scanner = new Scanner(messageDB);
