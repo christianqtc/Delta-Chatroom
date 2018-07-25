@@ -15,7 +15,8 @@
         <div class="dropdown">
   <button class="menubutton">Menu</button>
   <div class="dropdown-content">
-    <a href="#">Edit Profile</a>
+    <a href="chatsite.html">Home</a>
+    <a href="editprofile.html">Edit Profile</a>
     <a href="#">Contacts</a>
     <a href="#">Other</a>
   </div>
@@ -44,15 +45,26 @@
         };
 
         var datatest = {
-            data : "{\"author\" : \"Username\",\"message\" : \"Data testing.\",\"posted\" : \"time.\",\"edited\" : null,\"type\" : \"message\"}"
+            data : "{\"author\" : \"CCAL22\",\"message\" : \"Data testing.\",\"posted\" : \"time.\",\"edited\" : null,\"type\" : \"message\"}"
+        };
+
+        var datatest2 = {
+            data : "{\"author\" : \"MMURV15\",\"message\" : \"Data testing.\",\"posted\" : \"time.\",\"edited\" : null,\"type\" : \"message\"}"
         };
 
         var loginresulttest = {
             data : "{\"result\" :  true, \"type\" : \"loginresult\" }"
         };
 
+        var usertest = {
+            data : "{\"username\" : \"christianqtc\", \"password\" : \"******\"}"
+        };
+
+        var ul = "";
+
          function handleMessage( event ) {
             var chatz = document.getElementById("chatbox").contentDocument;
+            var namez = document.getElementById("userlistbox").innerHTML;
             var received = JSON.parse(event.data);
             var username = received.author;
             var text = "";
@@ -87,26 +99,39 @@
                 }
             }
 
-            console.log( "Recieved a message: " + event.data );
+
+            if (username)
+            {
+              ul += username + "<br>";
+            }
+              document.getElementById("userlistbox").innerHTML = ul;
+            console.log( "Received a message: " + event.data );
         };
 
     function test()
     {
         handleMessage(loginresulttest);
+        handleMessage(usertest);
+        handleMessage(datatest);
+        handleMessage(datatest2);
     };
 
 
+    var usertest = {
+        data : "{\"username\" : \"christianqtc\", \"password\" : \"******\"}"
+    };
 
-
+    var name = "christianqtc"
 
     function sendmessage()
     {
+        var textMessage = document.getElementById("msgBox").value;
         var msgjson = {
-            "author" : "user",
-            "message" : document.getElementById("msgBox").value,
-            "posted" : Date.now(),
-            "edited" : null,
-            "type" : "message"
+          author: name,
+          message: textMessage,
+          posted: Date.now(),
+          edited: null,
+          type: "message"
         };
 
         socket.send(JSON.stringify(msgjson));
@@ -141,10 +166,10 @@
   <table border="0" width="100%">
   <tr height="100%">
   <td width="120px" align="top" border="1" height="100%">
-  <div id="userlistbox" style="border: 1px solid black; width:100%; height:100%;"></div>
+  <div id="userlistbox" class"bordered" style="border: 3px solid lightgreen; width:100%; height:100%; border-radius: 8px"></div>
   </td>
   <td>
-  <iframe width="100%" height="400px" id="chatbox""></iframe>
+  <iframe width="100%" height="400px" id="chatbox"></iframe>
   <tr>
   <td>&nbsp;</td>
   <td>
@@ -152,11 +177,12 @@
 <br>
 <br>
 
-    <textarea id="msgBox" rows="4" cols="50">Enter text here...</textarea>
+
+<input id="msgBox" type="text" name="text" rows="4" cols="50" size="75" maxlength="256" placeholder="Chat with us!" autocomplete="off">
+  <input type="button" id="send" name="send" value="Send" onclick="sendmessage()"></p></td>
 
 
 
-    <button type="button" onclick="sendmessage()">Send!</button>
 
 
 
@@ -167,22 +193,6 @@
 
 <br>
 
-    <div class="chatbox">
-        <div class="chatlog">
-
-            <div class="chat">
-                 <div class="username"><p>Christian</p></div>
-                 <p class="chat-message"> Hey hows its going?(test)</p>
-            </div>
-            <div class="chat">
-                <div class="username"><p>Neil</p></div>
-                <p class="chat-message">Good and you?(test)</p>
-            </div>
-
-        </div>
-
-
-    </div>
 
 <style>
 table {
@@ -204,6 +214,7 @@ background-color: #f2f2f2;
 }
 </style>
 
+<!--
 <table id="userlist" width="190" height="600">
 <tbody>
 <tr>
@@ -213,7 +224,7 @@ background-color: #f2f2f2;
 </tr>
 <tr>
 <td style="width: 180px;">
-    <div class="username">
+    <div id"userlistbox2">
     <p>Christian <img src="https://www.wpclipart.com/blanks/shapes/color_labels/circle/color_label_circle_green.png" width="10%" height="10%" align="right">
             </div>
     </p>
@@ -255,5 +266,7 @@ background-color: #f2f2f2;
             <textarea></textarea>
             <button>Send</button>
         </div>
+
+      -->
 </body>
 </html>
