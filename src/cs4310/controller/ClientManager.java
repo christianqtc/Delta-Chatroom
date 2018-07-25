@@ -1,4 +1,4 @@
-package cs4310;
+package cs4310.controller;
 
 import cs4310.model.Identify;
 import cs4310.model.LoginPack;
@@ -35,7 +35,7 @@ public class ClientManager
     
     private void onStart()
     {
-        System.out.println( "The server has been started." );
+        System.out.println( "ClientManager started" );
     }
     
     synchronized void onOpen( Client client )
@@ -252,25 +252,6 @@ public class ClientManager
             // Start the client worker thread.
             client.gThread = clientWorkerThread;
             clientWorkerThread.start();
-        }
-    }
-    
-    public static void main( String[] args )
-    {
-        String hostName;
-        if ( args.length >= 1 )
-            hostName = args[0];
-        else
-            hostName = "localhost";
-        
-        try
-        {
-            ClientManager server = new ClientManager( new InetSocketAddress( hostName, 8000 ) );
-            server.run();
-        }
-        catch ( IOException e )
-        {
-            e.printStackTrace();
         }
     }
 }
