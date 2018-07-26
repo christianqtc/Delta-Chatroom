@@ -3,6 +3,7 @@
 <head>
     <title>Delta Chatroom</title>
     <link rel="stylesheet" type="text/css" href="style.css"></link>
+
 </head>
 <body>
 <p></p>
@@ -20,6 +21,92 @@
     <a href="#">Other</a>
   </div>
 </div>
+
+<a href="" id="logoutbutton" onclick="deleteCookie()"style="float: right; margin-left: 200px">Logout</a>
+
+</nav>
+
+
+<tr><td bgcolor="lightblue"><table cellpadding='0' cellspacing='0' border='0' width='100%'><tr><td bgcolor="lightblue" align="center" style="text-align:center;padding:2;padding-bottom:4"><b><font size="2" color="white" face="verdana,arial"><b>Update your information</b></font></td></tr>
+<tr><td bgcolor="lightgreen" style="padding:5; text-align:center;"><br />
+<style type="text/css"  scoped="scoped">
+        form { text-align:center; }
+	td { text-align:left; color: black; font-size: 1.4em; margin-bottom: 50px;}
+	table.center { width="150%"; height="150%"margin-left:50px; margin-right:50px;}
+	input { font-size: 1.5em; margin-bottom: 20px;}
+	</style><form method="post" name="aform" target="_top">
+<input type="hidden" name="action" value="edit2" autocomplete="off">
+<center><table class='center'>
+<tr><td>Confirm Password:</td><td><input type="password" id="password"></td></tr>
+<tr><td>Username:</td><td><input type="text" id="username"></td></tr>
+<tr><td>First Name:</td><td><input type="fname" id="firstname"></td></tr>
+<tr><td>Last Name:</td><td><input type="lname" id="lastname"></td></tr>
+<tr><td>&nbsp;</td><td><input type="button" id="send" name="send" value="Update Info" onclick="sendprofile()"></p></td>
+</table></center>
+</form>
+</td></tr></table></td></tr></table></center></font>
+
+
+  <script>
+
+      var socket = new WebSocket( "ws://localhost:8000/" );
+
+      // onopen is called when the WebSocket successfully establishes a connection with the server.
+      socket.onopen = function( event ) {
+          console.log( "Connection was opened!" );
+
+          // Once the connection is opened, it is safe to send data to the server through the WebSocket.
+          socket.send( "Test." );
+      };
+
+      function verifyCookie(name)
+      {
+          var name = name + "=";
+          var seperate = document.cookie.split(';');
+          for(var i=0;i < seperate.length;i++) {
+            var cook = seperate[i];
+            while (cook.charAt(0)==' ')
+                cook = cook.substring(1,cook.length);
+            if (cook.indexOf(name) == 0)
+                return cook.substring(name.length,cook.length);
+          }
+          return null;
+      }
+
+      function verifyAllCookie()
+      {
+        verifyCookie("username");
+        verifyCookie("password");
+        verifyCookie("loginresult");
+      }
+
+      function deleteCookie()
+      {
+          document.cookie = "username=; expires=Thu, 22 Feb 1990 12:00:00 UTC; path=/";
+          document.cookie = "password=; expires=Thu, 22 Feb 1990 12:00:00 UTC; path=/";
+          document.cookie = "loginresult=; expires=Thu, 22 Feb 1990 12:00:00 UTC; path=/";
+      }
+
+
+      function sendprofile()
+      {
+          var userN = document.getElementById("username").value;
+          var firstN = document.getElementById("firstname").value;
+          var lastN = document.getElementById("lastname").value;
+          var passW = document.getElementById("password").value;
+          var editprofilejson = {
+            Username: userN,
+            firstName: firstN,
+            lastName: lastN,
+            password: passW,
+            type: "registration"
+      };
+      socket.send(JSON.stringify(editprofilejson))
+   }
+
+
+ </script>
+
 
 </body>
 </html>
