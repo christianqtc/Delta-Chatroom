@@ -193,19 +193,21 @@ public class ClientManager
         gServerSocket = new ServerSocket( address.getPort(), 0, address.getAddress() );
     }
     
-    public void run() throws IOException
+    public void run()
     {
         onStart();
         
         while ( true )
         {
-            Socket clientSocket = gServerSocket.accept();
-            
-            if ( findClientByIP( clientSocket.getInetAddress() ) != null )
+            Socket clientSocket;
+            try
             {
-                // The client is already connected.
-                clientSocket.close();
-                continue;
+                clientSocket = gServerSocket.accept();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                break;
             }
             
             Client client = new Client( this, clientSocket );

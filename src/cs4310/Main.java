@@ -8,6 +8,7 @@ package cs4310;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import cs4310.controller.ClientManager;
+import java.util.Scanner;
 
 /**
  *
@@ -15,6 +16,8 @@ import cs4310.controller.ClientManager;
  */
 public class Main 
 {
+    static Thread cmThread;
+    
     public static void main( String[] args )
     {
         String hostName;
@@ -23,17 +26,36 @@ public class Main
         else
             hostName = "localhost";
         
+        // Initialize ClientManager module.
+        ClientManager cm;
         try
         {
-            ClientManager cm = new ClientManager( new InetSocketAddress( hostName, 8000 ) );
-            cm.run();
+            cm = new ClientManager( new InetSocketAddress( hostName, 8000 ) );
         }
         catch ( IOException e )
         {
             e.printStackTrace();
+            return;
         }
         
+        cmThread = new Thread() { 
+            @Override
+            public void run() {
+                cm.run();
+            }
+        };
+        
+        cmThread.setDaemon(true);
+        cmThread.start();
+        
+        Scanner in = new Scanner( System.in );
         
         System.out.println( "The chatserver has been started." );
+        
+        while ( true )
+        {
+            System.out.print("> ");
+            String line = in.nextLine();
+        }
     }
 }
