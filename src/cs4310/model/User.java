@@ -2,6 +2,8 @@ package cs4310.model;
 import cs4310.model.RegistrationPack;
 import java.util.Scanner;
 import java.util.NoSuchElementException;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.io.*;
 import java.io.File;
 
@@ -26,6 +28,7 @@ public class User{
             this.password=password;
             return;
       }
+      //Regpacket to User construcor
       public User(RegistrationPack packet){
             this.userName=packet.userName;
             this.firstName=packet.firstName;
@@ -38,10 +41,10 @@ public class User{
             File userDB = new File("Database/Users.dat");
             Scanner scanner = null;
             try {
-			scanner = new Scanner(userDB);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+                  scanner = new Scanner(userDB);
+            } catch (FileNotFoundException e) {
+                  e.printStackTrace();
+            }
             String uitter = null;
             //loop to find username
             while(!userName.equals(uitter)){
@@ -91,15 +94,57 @@ public class User{
             this.password = uitter;
       }
 
+      public static void removeFromDB(String targ){
+            File userDB = new File("Database/Users.dat");
+            Scanner scanner = null;
+            try {
+                  scanner = new Scanner(userDB);
+            } catch (FileNotFoundException e) {
+                  e.printStackTrace();
+            }
+            //create db string
+            String db ="";
+            while (scanner.hasNext()) {
+                  db +=scanner.next();
+            }
+            //search for json objects
+            Pattern pat = Pattern.compile("\\{[^\\}]*\\},");
+            Matcher mat = pat.matcher(db);
+            while (mat.find()) {
+                  String match = mat.group(0);
+                  String userName = null;
+                  Scanner miniscan = new Scanner(match);
+                  miniscan.useDelimiter("userName");
+                  if (miniscan.hasNext()){miniscan.next();}
+                  miniscan.useDelimiter("\"");
+                  if (miniscan.hasNext()){miniscan.next();}
+                  if (miniscan.hasNext()){miniscan.next();}
+                  if (miniscan.hasNext()){userName=miniscan.next();}
+                  if(userName.equals(targ)){
+                        db=db.replace(match,"");
+                        break;
+                  }
+            }
+            FileWriter newUserDB = null;
+            try {
+                  newUserDB = new FileWriter(userDB);
+                  newUserDB.write(db);
+                  newUserDB.close();
+            } catch (IOException e) {
+                  e.printStackTrace();
+            }
+            return;
+
+      }
       public String toJson(){
             String json =
-                 "{\n"+
-                    "\"userName\": \""+userName+"\",\n"+
-                    "\"firstName\": \""+firstName+"\",\n"+
-                    "\"lastName\": \""+lastName+"\",\n"+
-                    "\"password\": \""+password+"\"\n"+
-                 "}\n";
-          return json;
+            "{"+
+            "\"userName\": \""+userName+"\","+
+            "\"firstName\": \""+firstName+"\","+
+            "\"lastName\": \""+lastName+"\","+
+            "\"password\": \""+password+"\""+
+            "}";
+            return json;
       }
 
       public void addToDB(){
@@ -109,10 +154,10 @@ public class User{
             //Create Scanner to grab everything before the closing bracket
             Scanner scanner = null;
             try {
-			scanner = new Scanner(userDB).useDelimiter("\\{");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+                  scanner = new Scanner(userDB).useDelimiter("\\{");
+            } catch (FileNotFoundException e) {
+                  e.printStackTrace();
+            }
             //Create string with appeneded new user
             String appended = scanner.next()+toJson()+",";
             //Append last part of json file
@@ -123,13 +168,13 @@ public class User{
             if(scanner!=null){scanner.close();}
             //Write completed json to file
             FileWriter newUserDB = null;
-		try {
-			newUserDB = new FileWriter(userDB);
+            try {
+                  newUserDB = new FileWriter(userDB);
                   newUserDB.write(appended);
                   newUserDB.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+            } catch (IOException e) {
+                  e.printStackTrace();
+            }
             return;
       }
 }
