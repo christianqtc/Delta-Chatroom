@@ -121,6 +121,7 @@
         handleMessage(usertest);
         handleMessage(datatest);
         handleMessage(datatest2);
+        verifyAllCookie();
     };
 
 
@@ -136,9 +137,9 @@
         var msgjson = {
           author: name,
           message: textMessage,
-          posted: Date.now(),
-          edited: null,
-          type: "message"
+          posted: Date.now().toString(),
+          edited: "null",
+          "type": "message"
         };
 
         socket.send(JSON.stringify(msgjson));
@@ -155,14 +156,39 @@
     {
         var d = new Date();
         d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
-        document.cookie = "username=CCAL22; loginresult=true; path=/";
+        document.cookie = "username=CCAL22; path=/";
+        document.cookie = "password=pass123; path=/";
+        document.cookie = "loginresult=true; path=/";
         alert("Cookies test... set to name= " + username);
         console.log("cookies created..");
+    }
+
+    function verifyCookie(name)
+    {
+        var name = name + "=";
+        var seperate = document.cookie.split(';');
+        for(var i=0;i < seperate.length;i++) {
+          var cook = seperate[i];
+          while (cook.charAt(0)==' ')
+              cook = cook.substring(1,cook.length);
+          if (cook.indexOf(name) == 0)
+              return cook.substring(name.length,cook.length);
+        }
+        return null;
+    }
+
+    function verifyAllCookie()
+    {
+      socket.send(verifyCookie("username"));
+      verifyCookie("password");
+      verifyCookie("loginresult");
     }
 
     function deleteCookie()
     {
         document.cookie = "username=; expires=Thu, 22 Feb 1990 12:00:00 UTC; path=/";
+        document.cookie = "password=; expires=Thu, 22 Feb 1990 12:00:00 UTC; path=/";
+        document.cookie = "loginresult=; expires=Thu, 22 Feb 1990 12:00:00 UTC; path=/";
     }
 
     </script>
