@@ -25,6 +25,8 @@
     <script>
     var socket = new WebSocket( "ws://localhost:8000/" );
 
+    var usersArr = [""];
+
         // onopen is called when the WebSocket successfully establishes a connection with the server.
         socket.onopen = function( event ) {
             console.log( "Connection was opened!" );
@@ -33,10 +35,20 @@
             {
                 type: "messagerequest"
             };
-            socket.send(JSON.stringify(reqmsgs));
+            // socket.send(JSON.stringify(reqmsgs));
 
             // Once the connection is opened, it is safe to send data to the server through the WebSocket.
-            socket.send( "Test." );
+
+            var testmsgs =
+            {
+              author: "username1",
+              message: "testing the messages sent.",
+              posted: "date",
+              edited: "testing",
+              type: "message"
+            };
+
+             socket.send(JSON.stringify(testmsgs));
         };
 
         console.log( "Attempting to connect!" );
@@ -51,12 +63,23 @@
         };
 
         var datatest = {
-            data : "{\"author\" : \"CCAL22\",\"message\" : \"Data testing.\",\"posted\" : \"time.\",\"edited\" : null,\"type\" : \"message\"}"
+          author: "CCAL22",
+          message: "testing the data yo",
+          posted: "Date.now().toString()",
+          edited: "test",
+          type: "message"
         };
 
+
         var datatest2 = {
-            data : "{\"author\" : \"MMURV15\",\"message\" : \"Data testing.\",\"posted\" : \"time.\",\"edited\" : null,\"type\" : \"message\"}"
+          author: "MMURV15",
+          message: "Doing some more testing k",
+          posted: Date.now().toString(),
+          edited: "test",
+          type: "message"
         };
+
+
 
         var loginresulttest = {
             data : "{\"result\" :  true, \"type\" : \"loginresult\" }"
@@ -71,6 +94,7 @@
          function handleMessage( event ) {
             var chatz = document.getElementById("chatbox").contentDocument;
             var namez = document.getElementById("userlistbox").innerHTML;
+            console.log("the received before parsed is :" + event.data);
             var received = JSON.parse(event.data);
             var username = received.author;
             var text = "";
@@ -80,6 +104,8 @@
             var d = Date(timeStamp);
             var jsontype = received.type;
             var result = received.result;
+
+            console.log("jsontype is " + jsontype);
 
             if (jsontype == "message")
             {
@@ -104,23 +130,41 @@
                 {
                     createCookie(result);
                 }
+
             }
 
+            //console.log("USERNAME IS " + username);
+            //console.log("IF STATEMENT " + usersArr.includes(username));
 
-            if (username)
+            if (usersArr.includes(username) == false)
             {
-              ul += username + "<br>";
+                usersArr.push(username);
+                ul += username + "<br>";
+                console.log("usersArr is " + usersArr);
             }
-              document.getElementById("userlistbox").innerHTML = ul;
+            document.getElementById("userlistbox").innerHTML = ul;
+
+                //console.log("USERLIST IS " + ul);
             console.log( "Received a message: " + event.data );
+
         };
+
 
     function test()
     {
-        handleMessage(loginresulttest);
-        handleMessage(usertest);
-        handleMessage(datatest);
-        handleMessage(datatest2);
+        //handleMessage(loginresulttest);
+        //handleMessage(usertest);
+        var msgjson = {
+          author: name,
+          message: "TESTING DATA HERE ",
+          posted: Date.now().toString(),
+          edited: "test",
+          type: "message"
+        };
+        console.log("TEST 1"+datatest);
+        console.log("TEST 1" +JSON.stringify(msgjson));
+        handleMessage(JSON.stringify(msgjson));
+        //handleMessage(JSON.stringify(datatest2));
         verifyAllCookie();
     };
 
@@ -138,8 +182,8 @@
           author: name,
           message: textMessage,
           posted: Date.now().toString(),
-          edited: "null",
-          "type": "message"
+          edited: "test",
+          type: "message"
         };
 
         socket.send(JSON.stringify(msgjson));
@@ -225,7 +269,7 @@
 
 
 
-    <a href="" id="logoutbutton" onclick="deleteCookie()"style="float: right;">Logout</a>
+    <a href="" id="logoutbutton" onclick="deleteCookie()"style="float: right; color: white; font-weight: bold;">Logout</a>
     </ul>
 </nav>
 
@@ -235,7 +279,7 @@
 <style>
 table {
     border-collapse: collapse;
-    border: 1px solid blue;
+    border: 1px solid orange;
     background: #fff;
     padding: 25px;
     margin: 40px;
