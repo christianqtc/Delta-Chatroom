@@ -89,7 +89,7 @@
             data : "{\"username\" : \"christianqtc\", \"password\" : \"******\"}"
         };
 
-        var ul = "";
+        var ul = "Users Online:" + "<br>";
 
          function handleMessage( event ) {
             var chatz = document.getElementById("chatbox").contentDocument;
@@ -155,15 +155,15 @@
         //handleMessage(loginresulttest);
         //handleMessage(usertest);
         var msgjson = {
-          author: name,
+          author: "TEST USER 1",
           message: "TESTING DATA HERE ",
           posted: Date.now().toString(),
           edited: "test",
           type: "message"
         };
-        console.log("TEST 1"+datatest);
+        //console.log("TEST 1"+datatest);
         console.log("TEST 1" +JSON.stringify(msgjson));
-        handleMessage(JSON.stringify(msgjson));
+        socket.send(JSON.stringify(msgjson));
         //handleMessage(JSON.stringify(datatest2));
         verifyAllCookie();
     };
@@ -246,9 +246,13 @@
 
 
   <table border="0" width="100%">
+
   <tr height="100%">
-  <td width="120px" align="top" border="1" height="100%">
-  <div id="userlistbox" class"bordered" style="border: 3px solid lightgreen; width:100%; height:100%; border-radius: 8px"></div>
+
+  <td width="120px" align="top" border="1" height="100%" style="">
+
+  <div id="userlistbox" class"bordered" style="border: 3px solid lightgreen; width:115%; height:100%; border-radius: 8px;"></div>
+
   </td>
   <td>
   <iframe width="100%" height="400px" id="chatbox"></iframe>
