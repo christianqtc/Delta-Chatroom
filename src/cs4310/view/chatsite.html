@@ -23,7 +23,7 @@
 </div>
 
     <script>
-    var socket = new WebSocket( "ws://localhost:8000/" );
+    var socket = new WebSocket( "ws://%s:8000/" );
 
         // onopen is called when the WebSocket successfully establishes a connection with the server.
         socket.onopen = function( event ) {
