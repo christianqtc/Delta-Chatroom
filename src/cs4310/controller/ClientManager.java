@@ -109,6 +109,7 @@ public class ClientManager
                         // Make a new User model and add to the database.
                         User user = new User( packet );
                         user.addToDB();
+                        client.setUserModel(user);
                         
                         // Send success response.
                         LoginResultPack responsePacket = new LoginResultPack( true );
@@ -120,6 +121,10 @@ public class ClientManager
                         if ( query.password.equals( packet.password ) )
                         {
                             // TODO: Edit details in database.
+                            User.removeFromDB(packet.userName);
+                            User user = new User( packet );
+                            user.addToDB();
+                            client.setUserModel(user);
                             
                             // Send success response.
                             LoginResultPack responsePacket = new LoginResultPack( true );
