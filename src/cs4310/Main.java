@@ -14,10 +14,10 @@ import java.util.Scanner;
  *
  * @author nikol
  */
-public class Main 
+public class Main
 {
     static Thread cmThread;
-    
+
     public static void main( String[] args )
     {
         String hostName;
@@ -25,7 +25,7 @@ public class Main
             hostName = args[0];
         else
             hostName = "localhost";
-        
+
         // Initialize ClientManager module.
         ClientManager cm;
         try
@@ -37,25 +37,28 @@ public class Main
             e.printStackTrace();
             return;
         }
-        
-        cmThread = new Thread() { 
+
+        cmThread = new Thread() {
             @Override
             public void run() {
                 cm.run();
             }
         };
-        
+
         cmThread.setDaemon(true);
         cmThread.start();
-        
+
         Scanner in = new Scanner( System.in );
-        
+
         System.out.println( "The chatserver has been started." );
-        
+
         while ( true )
         {
             System.out.print("> ");
             String line = in.nextLine();
+            if(line.equals("poweroff")){
+                  break;
+            }
         }
     }
 }
