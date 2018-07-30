@@ -17,7 +17,8 @@ import java.util.Scanner;
 public class Main
 {
     static Thread cmThread;
-
+    static Thread psThread;
+    
     public static void main( String[] args )
     {
         String hostName;
@@ -44,9 +45,21 @@ public class Main
                 cm.run();
             }
         };
-
+        
         cmThread.setDaemon(true);
+        
+        psThread = new Thread() {
+            @Override
+            public void run() {
+                PageServicer ps = new PageServicer( new InetSocketAddress( hostName, 80 ) );
+            }
+        };
+        
+        psThread.setDaemon(true);
+        
+        // Start the threads.
         cmThread.start();
+        psThread.start();
 
         Scanner in = new Scanner( System.in );
 
@@ -55,9 +68,9 @@ public class Main
         while ( true )
         {
             System.out.print("> ");
-            String line = in.nextLine();
-            if(line.equals("poweroff")){
-                  break;
+            String line = in.nextLine().trim();
+            if ( line.equalsIgnoreCase( "poweroff" ) ) {
+                break;
             }
         }
     }
