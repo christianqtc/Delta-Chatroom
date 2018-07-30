@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 package cs4310.controller;
 
-=======
->>>>>>> 4f45ecedfe82c05a0e1774fe1d921a9847034be7
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
