@@ -12,7 +12,7 @@ public class LoginResultPack{
       public String toJson(){
             String json =
                  "{\n"+
-                    "\"result\": \""+result+"\",\n"+
+                    "\"result\": "+result+",\n"+
                     "\"type\": \""+type+"\",\n"+
                  "}\n";
           return json;
