@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 package cs4310.controller;
 
+=======
+>>>>>>> 4f45ecedfe82c05a0e1774fe1d921a9847034be7
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,9 +15,16 @@ import com.sun.net.httpserver.HttpHandler;
  * This class instantiates the HTTP Server and handles the page request
  */
 public class PageServicer {
+<<<<<<< HEAD
 	public PageServicer() {
 		try {
 			HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+=======
+	final InetSocketAddress SOCKETPORT = new InetSocketAddress(8080);
+	public PageServicer() {
+		try {
+			HttpServer server = HttpServer.create(SOCKETPORT, 0);
+>>>>>>> 4f45ecedfe82c05a0e1774fe1d921a9847034be7
 			server.createContext("/", new PageHandler());
 			server.setExecutor(null); 
 			server.start();
@@ -22,6 +32,7 @@ public class PageServicer {
 			System.out.println(e.getMessage());
 		}
 	}
+<<<<<<< HEAD
         public PageServicer(InetSocketAddress address) {
 		try {
 			HttpServer server = HttpServer.create(address, 0);
@@ -33,6 +44,8 @@ public class PageServicer {
 		}
 	}
 
+=======
+>>>>>>> 4f45ecedfe82c05a0e1774fe1d921a9847034be7
 	static class PageHandler implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
 			System.out.println("Request Method:\t" + t.getRequestMethod());
@@ -67,11 +80,19 @@ public class PageServicer {
 		private File getPageFile(String f) {
 			File test = null;
 			if (f.equals("style.css")) {
+<<<<<<< HEAD
 				test = new File("./src/cs4310/view/style.css");
 			} else if (f.equals("editprofile.html")) {
 				test = new File("./src/cs4310/view/editprofile.html");
 			} else{
 				test = new File("./src/cs4310/view/chatsite.html");
+=======
+				test = new File("style.css");
+			} else if (f.equals("editprofile.html")) {
+				test = new File("editprofile.html");
+			} else{
+				test = new File("chatsite.html");
+>>>>>>> 4f45ecedfe82c05a0e1774fe1d921a9847034be7
 			}
 			return test;
 		}
