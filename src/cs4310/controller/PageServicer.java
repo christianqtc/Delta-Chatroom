@@ -76,13 +76,18 @@ public class PageServicer {
 			}
 		}
 		private File getPageFile(String f) {
-			File test = null;
+			File respFile = null;
 			if (f.equals("style.css")) {
-				test = new File("./src/cs4310/view/style.css");
+				respFile = new File("./src/cs4310/view/style.css");
 			} else if (f.equals("editprofile.html")) {
-				test = new File("./src/cs4310/view/editprofile.html");
-			} else{
-				test = new File("./src/cs4310/view/chatsite.html");
+				respFile = new File("./src/cs4310/view/editprofile.html");
+			} else if (f.equals("chatsite.html"){
+				respFile = new File("./src/cs4310/view/chatsite.html");
+			} else if (f.equals("register.html"){
+				respFile = new File("./src/cs4310/view/register.html");
+			}else 
+			{
+				respFile = new File("./src/cs4310/view/login.html")
 			}
 			return test;
 		}
