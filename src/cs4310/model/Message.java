@@ -50,7 +50,7 @@ public class Message{
       public void addToDB(){
             //Messages.dat must have at least one record before using this function or else json will be corrupted due to a leading comma.
             //Create file object
-            File messageDB = new File("./src/Database/Messages.dat");
+            File messageDB = new File("Database/Messages.dat");
             //Create Scanner to grab everything before the closing bracket
             Scanner scanner = null;
             try {
@@ -83,7 +83,7 @@ public class Message{
             int tot = to-from;
             tot+=1;
             Message[] arr = new Message [tot];
-            File messageDB = new File("./src/Database/Messages.dat");
+            File messageDB = new File("Database/Messages.dat");
             Scanner scanner = null;
             try {
 			scanner = new Scanner(messageDB);
