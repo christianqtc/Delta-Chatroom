@@ -59,7 +59,6 @@ public class PageServicer {
 				outStream.flush();
 				outStream.close();
 			} else {
-				t.sendResponseHeaders(200, 0);
 				OutputStream outStream = t.getResponseBody();
 				FileInputStream fileStream = new FileInputStream(file);
 				final byte[] buffer = new byte[0x10000];
@@ -68,6 +67,7 @@ public class PageServicer {
 					str = str+(char)count;
 				}
 				str = str.replace("%s", this.newServer.getAddress().getHostName());
+				t.sendResponseHeaders(200, str.length());
 				//System.out.print(str);
 				outStream.write(str.getBytes());
 				outStream.flush();
