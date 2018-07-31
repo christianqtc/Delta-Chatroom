@@ -23,7 +23,9 @@
 </div>
 
     <script>
-    var socket = new WebSocket( "ws://localhost:8000/" );
+    var ip = "%s"; // "134.154.62.221";
+
+    var socket = new WebSocket( "ws://" + ip + ":8000/" );
 
     var usersArr = [""];
 
@@ -162,10 +164,11 @@
           type: "message"
         };
         //console.log("TEST 1"+datatest);
+        console.log("THIS IS THE JSON" + msgjson);
         console.log("TEST 1" +JSON.stringify(msgjson));
         socket.send(JSON.stringify(msgjson));
         //handleMessage(JSON.stringify(datatest2));
-        verifyAllCookie();
+        // verifyAllCookie();
     };
 
 
@@ -182,7 +185,7 @@
           author: name,
           message: textMessage,
           posted: Date.now().toString(),
-          edited: "test",
+          edited: "",
           type: "message"
         };
 
@@ -233,6 +236,7 @@
         document.cookie = "username=; expires=Thu, 22 Feb 1990 12:00:00 UTC; path=/";
         document.cookie = "password=; expires=Thu, 22 Feb 1990 12:00:00 UTC; path=/";
         document.cookie = "loginresult=; expires=Thu, 22 Feb 1990 12:00:00 UTC; path=/";
+        console.log("COOKIES DELETED");
     }
 
     </script>
@@ -273,7 +277,7 @@
 
 
 
-    <a href="" id="logoutbutton" onclick="deleteCookie()"style="float: right; color: white; font-weight: bold;">Logout</a>
+    <a href="editprofile.html" id="logoutbutton" onclick="deleteCookie()"style="float: right; color: white; font-weight: bold;">Logout</a>
     </ul>
 </nav>
 
