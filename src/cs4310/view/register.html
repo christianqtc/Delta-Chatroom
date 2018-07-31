@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Register</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Palanquin" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Bad+Script" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  	<style type="text/css">
+  		* {
+			box-sizing: border-box;
+		}
+
+		h1 {
+			font-family: fantasy;
+			font-size: 4em;
+			border-bottom: 3px solid pink;
+			border-right: 3px solid pink;
+			width: 530px;
+			text-align: center;
+			margin-top: 12px;
+		}
+
+		h2 {
+			font-family: 'Bad Script', cursive;
+			font-size: 2.25em;
+			font-weight: bold;
+			text-align: left;
+			margin-top: 12px;
+		}
+
+		label {
+			font-family: 'Palanquin', sans-serif;
+			font-size: 1.75em;
+			text-align: left;
+			padding: 12px 12px 12px 0;
+			display: inline-block;
+		}
+
+		input[type=text], [type=password], [type=email], [type=date]{
+			width: 90%;
+			padding: 12px;
+			border: 1px solid #ccc;
+			border-radius: 6px;
+			resize: vertical;
+		}
+
+		select{
+			width: 90%;
+			padding: 14px;
+			border: 1px solid #ccc;
+			border-radius: 6px;
+			resize: vertical;
+		}
+
+		#register {
+			background-color: #4CAF50;
+		    color: white;
+		    padding: 12px 30px;
+		     padding: 20px 50px 20px 50px 70;
+		    border: none;
+		    border-radius: 8px;
+		    cursor: pointer;
+		    float: right;
+		}
+
+		#register:hover {
+			background-color: #45a049
+		}
+
+		body {
+			background-color: #cccccc;
+		}
+
+		.container {
+			border-radius: 5px;
+    		background-color: #f2f2f2;
+    		padding: 20px;
+		}
+
+		.sm-col {
+			float: left;
+			width: 25%;
+			margin-top: 16px;
+		}
+
+		.lg-col {
+			float: left;
+			width: 52%;
+			margin-top: 16px;
+		}
+
+		.row:after {
+			content: "";
+			display: table;
+			clear: both;
+		}
+
+		.button {
+			float: right;
+		}
+
+		.search {
+			float: right;
+		}
+
+		#validation{
+			display: none;
+			position: relative;
+			padding: 20px;
+			margin-top: 10px;
+		}
+
+		#validation p{
+		    padding: 10px 100px;
+		    font-size: 18px;
+		    display:
+		}
+
+		.fufilled {
+			color: #49CB09;
+		}
+
+		.fufilled:before {
+			position: relative;
+			left: -40px;
+    		content: "✔";
+		}
+
+.required {
+    color: red;
+}
+
+.required:before {
+    position: relative;
+    left: -40px;
+    content: "❌";
+}
+  	</style>
+</head>
+
+<body>
+
+	<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="login.html">Delta Chatroom</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+	    <span class="navbar-toggler-icon"></span>
+		</button>
+	  	<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+	    <div class="navbar-nav">
+	      <a class="nav-item nav-link" href="login.html">Login Page </a>&emsp;
+	      <a class="nav-item nav-link active" href="register.html">Create an Account <span class="sr-only">(current)</span></a>&emsp;
+	      <a class="nav-item nav-link" href="resetCredentials.html">Forgot my Credentials </a>&emsp;
+	      <a class="nav-item nav-link" href="chatsite.html">Home Page </a>&emsp;
+	      <a class="nav-item nav-link" href="editprofile.html">Profile Page </a>&emsp;
+	      <a class="nav-item nav-link disabled" href="about.html">About Us </a>&emsp;&emsp;&emsp;
+	      <form class="form-inline my-2 my-lg-0">
+      	<div class="search"><input class="form-control mr-sm-2" type="search" placeholder="Search for Users" aria-label="Search"></div>
+      	<div class="search"><button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button></div>
+	    </form>
+	    </div>
+	  </div>
+	</nav>
+
+	<div class="jumbotron">
+		<h1 class="display-4">Delta Chatroom</h1>
+		<br><br>
+		<h2>Welcome to the Delta Chatroom, A completly private instant chatting service.</h2>
+		<h2>Please create your very own free account for deltachat.</h2>
+		<hr class="my-4">
+		<br><br><br>
+		<p>
+			<div class=".fixed-bottom">
+			<div class="container">
+				<form method="POST" action="">
+
+				<div class="row">
+				<div class="sm-col">
+					<label for="firstName">First Name:</label>
+				</div>
+				<div class="lg-col">
+					<input type="text" id="firstName" name="firstName" placeholder="Please enter your first name." required>
+				</div>
+				</div>
+
+				<div class="row">
+				<div class="sm-col">
+					<label for="lastName">Last Name:</label>
+				</div>
+				<div class="lg-col">
+					<input type="text" id="lastName" name="lastName" placeholder="Please enter your last name." required>
+				</div>
+				</div>
+
+				<div class="row">
+				<div class="sm-col">
+					<label for="userName">User Name:</label>
+				</div>
+				<div class="lg-col">
+					<input type="text" id="userName" name="userName" placeholder="Please create your username here." required>
+				</div>
+				</div>
+
+				<div class="row">
+				<div class="sm-col">
+					<label for="email">E-mail:</label>
+				</div>
+				<div class="lg-col">
+					<input type="email" id="email" name="email" placeholder="Please enter your email here." required>
+				</div>
+				</div>
+
+				<div class="row">
+				<div class="sm-col">
+					<label for="dob">Date Of Birth:</label>
+				</div>
+				<div class="lg-col">
+					<input type="date" id="dob" name="dob" required>
+				</div>
+				</div>
+
+	    		<div class="row">
+	      		<div class="sm-col">
+	       			<label for="country">Country:</label>
+	    		</div>
+	      		<div class="lg-col">
+	        	<select id="country" name="country" required>
+	        		<option value="usa">USA</option>
+	        		<option value="canada">Canada</option>
+			       	<option value="uk">UK</option>
+	        	    <option value="australia">Australia</option>
+	        	    <option value="other">Other</option>
+	      		</select>
+	    		</div>
+				</div>
+
+				<div class="row">
+				<div class="sm-col">
+					<label for="securityQues">Security Question:</label>
+				</div>
+				<div class="lg-col">
+					<select id="securityQues" name="securityQues" required>
+	        		<option value="Q1">Your childhood nickname?</option>
+	        		<option value="Q2">Name of your first pet?</option>
+			       	<option value="Q3">Favorite siblings name and birthday.</option>
+	        	    <option value="Q4">Name of your favorite elementary teacher?</option>
+	        	    <option value="Q5">Favorite singer or song?</option>
+	      		</select>
+				</div>
+				</div>
+
+				<div class="row">
+				<div class="sm-col">
+				</div>
+				<div class="lg-col">
+					<input type="text" id="securityQues" name="securityQues" placeholder="Please answer your selected security question." required>
+				</div>
+				</div>
+
+				<br>
+		   		<div class="row">
+	   			<div class="sm-col">
+	       			<label for="password">Password:</label>
+	     		</div>
+	   			<div class="lg-col">
+	   				<input type="password" id="password" name="password" placeholder="Please create your password." pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+	    		</div>
+	   			</div>
+
+	   			<div id="validation">
+	  				<h3>Password must comply with these conditions:</h3>
+	  				<p id="upperCase" class="required">A <b>Capitol</b> letter</p>
+	  				<p id="lowerCase" class="required">A <b>Lower case</b> letter</p>
+	  				<p id="number" class="required">A <b>Number</b> character</p>
+	  				<p id="minLength" class="required">A <b>Minimum 10</b> characters</p>
+	  			</div>
+
+	   			<br><br><br>
+				<div class="row">
+	    			&emsp;&emsp;
+	      			<button type="reset" class="btn btn-primary btn-lg">Reset</button>
+	    			&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+	      			<center><a onclick="register()" class="btn btn-primary btn-lg" id="register" href="login.html" role="button">Create an Account</a></center>
+	    		</div>
+	    		<br><br><br><br>
+	  			</form>
+			</div>
+			</div>
+		</p>
+
+	<script type="text/javascript">
+
+		function alert_func() {
+	    	alert("Note: Remember the username and password you created. \n \n \t Take note of your security question, along with your reply before moving on.");
+		}
+
+		var password = document.getElementById("password");
+		var upperCase = document.getElementById("upperCase");
+		var lowerCase = document.getElementById("lowerCase");
+		var number = document.getElementById("number");
+		var minLength = document.getElementById("minLength");
+
+		password.onclick = function() { /*onfocus*/
+			document.getElementById("validation").style.display = "block";
+		}
+		password.onblur = function() {
+			document.getElementById("validation").style.display = "none";
+		}
+
+		password.onkeyup = function() {
+
+			var upperCaseChar = /[A-Z]/g;
+			if(password.value.match(upperCaseChar)) {
+				upperCase.classList.remove("required");
+				upperCase.classList.add("fufilled");
+			} else {
+				upperCase.classList.remove("fufilled");
+				upperCase.classList.add("required");
+			}
+
+			var lowerCaseChar = /[a-z]/g;
+			if(password.value.match(lowerCaseChar)) {
+				lowerCase.classList.remove("required")
+				lowerCase.classList.add("fufilled");
+			} else {
+				lowerCase.classList.remove("fufilled")
+				lowerCase.classList.add("required");
+			}
+
+			var numberChar = /[0-9]/g;
+			if(password.value.match(numberChar)) {
+				number.classList.remove("required");
+				number.classList.add("fufilled");
+			} else {
+				number.classList.remove("fufilled");
+				number.classList.add("required");
+			}
+
+			var minLengthChar = 10;
+			var curLength = password.value.length
+			if(curLength >= minLengthChar) {
+				minLength.classList.remove("required");
+				minLength.classList.add("fufilled");
+			} else {
+				length.classList.remove("fufilled");
+				length.classList.add("required");
+			}
+		}
+
+		console.log("starting to connect");
+
+		var socket = new WebSocket("ws://localhost:8000/");
+
+		socket.onopen = function(event) {
+			console.log("connection successful!");
+		}
+
+		socket.onerror = function(error) {
+			console.log('Websocket Error: ' + error);
+			alert("Problem with connection of WebSocket. \n Please check your console log for details.");
+		}
+
+		function register() {
+			var userName = document.getElementById("userName").value;
+			var FName = document.getElementById("firstName").value;
+			var LName = document.getElementById("lastName").value;
+			var PWord = document.getElementById("password").value;
+
+			var registration = {
+			    "userName": userName,
+			    "firstName": FName,
+			    "lastName": LName,
+			    "password": PWord,
+					"oldUserName": "",
+			    "type" : "registration"
+			};
+
+			alert("success");
+			socket.send(JSON.stringify(registration));
+		}
+
+</script>
+
+</body>
+</html>
