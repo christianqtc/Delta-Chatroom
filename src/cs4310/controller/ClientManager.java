@@ -83,11 +83,13 @@ public class ClientManager
             }
             case "message":
             {
-                if ( client.getUserModel() != null ) // Always check if client is authenticated.
+                //if ( client.getUserModel() != null ) // Always check if client is authenticated.
                 {
                     MessagePack packet = new MessagePack( data );
                     if ( packet.author != null && packet.message != null && packet.message.length() > 0 )
                     {
+                        new Message( packet ).addToDB();
+                        
                         final String json = packet.toJson();
                         gClients.forEach((c) -> {
                             c.send( json );
@@ -118,10 +120,11 @@ public class ClientManager
                     }
                     else
                     {
-                        if ( query.password.equals( packet.password ) )
+                        if ( query.password.equals( packet.password ) &&
+                                packet.oldUserName != null && packet.oldUserName.length() > 0 )
                         {
                             // TODO: Edit details in database.
-                            User.removeFromDB(packet.userName);
+                            User.removeFromDB(packet.oldUserName);
                             User user = new User( packet );
                             user.addToDB();
                             client.setUserModel(user);
