@@ -185,7 +185,7 @@
     {
         var textMessage = document.getElementById("msgBox").value;
         var msgjson = {
-          author: name,
+          author: verifyCookie("username"),
           message: textMessage,
           posted: Date.now().toString(),
           edited: "",

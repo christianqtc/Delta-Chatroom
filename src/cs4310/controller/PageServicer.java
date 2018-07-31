@@ -22,7 +22,7 @@ public class PageServicer {
 			server = HttpServer.create(this.address, 0);
 			server.createContext("/", ph);
 			ph.newServer= this.server;
-			server.setExecutor(null); 
+			server.setExecutor(null);
 			server.start();
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
@@ -30,15 +30,15 @@ public class PageServicer {
 	}
 	public PageServicer(InetSocketAddress address) {
 		try {
-			this.address = address; 
+			this.address = address;
 			server = HttpServer.create(address, 0);
 			server.createContext("/", ph);
 			ph.newServer= this.server;
-			server.setExecutor(null); 
+			server.setExecutor(null);
 			server.start();
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
-		}	
+		}
 	}
 	static class PageHandler implements HttpHandler {
 		HttpServer newServer;
@@ -68,7 +68,7 @@ public class PageServicer {
 					str = str+(char)count;
 				}
 				str = str.replace("%s", this.newServer.getAddress().getHostName());
-				t.sendResponseHeaders(200, str.length());
+				t.sendResponseHeaders(200, 0);
 				//System.out.print(str);
 				outStream.write(str.getBytes());
 				outStream.flush();

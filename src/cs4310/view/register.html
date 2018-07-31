@@ -156,7 +156,7 @@
 	      <a class="nav-item nav-link" href="login.html">Login Page </a>&emsp;
 	      <a class="nav-item nav-link active" href="register.html">Create an Account <span class="sr-only">(current)</span></a>&emsp;
 	      <a class="nav-item nav-link" href="resetCredentials.html">Forgot my Credentials </a>&emsp;
-	      <a class="nav-item nav-link" href="chatsite.html">Home Page </a>&emsp;
+	      <a class="nav-item nav-link disabled" href="chatsite.html">Home Page </a>&emsp;
 	      <a class="nav-item nav-link" href="editprofile.html">Profile Page </a>&emsp;
 	      <a class="nav-item nav-link disabled" href="about.html">About Us </a>&emsp;&emsp;&emsp;
 	      <form class="form-inline my-2 my-lg-0">
@@ -354,7 +354,7 @@
 
 		console.log("starting to connect");
 
-		var socket = new WebSocket("ws://localhost:8000/");
+		var socket = new WebSocket("ws://%s:8000/");
 
 		socket.onopen = function(event) {
 			console.log("connection successful!");
