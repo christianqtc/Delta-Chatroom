@@ -68,7 +68,7 @@ public class PageServicer {
 					str = str+(char)count;
 				}
 				str = str.replace("%s", this.newServer.getAddress().getHostName());
-				System.out.print(str);
+				//System.out.print(str);
 				outStream.write(str.getBytes());
 				outStream.flush();
 				outStream.close();
