@@ -23,7 +23,7 @@
 </div>
 
     <script>
-    var ip = "%s"; // "134.154.62.221";
+    var ip = "localhost"; // "134.154.62.221";
 
     var socket = new WebSocket( "ws://" + ip + ":8000/" );
 
@@ -176,7 +176,10 @@
         data : "{\"username\" : \"christianqtc\", \"password\" : \"******\"}"
     };
 
-    var name = "christianqtc"
+    var name = verifyCookie(name);
+    console.log(verifyCookie(name));
+
+
 
     function sendmessage()
     {
@@ -189,9 +192,20 @@
           type: "message"
         };
 
+        document.getElementById("msgBox")
+        .addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+           console.log("ENTER BUTTON PUSHED");
+            document.getElementById("msgBox").click();
+            sendmessage();
+        }
+    });
+
         socket.send(JSON.stringify(msgjson));
 
     };
+
 
     function displaymessage()
     {
