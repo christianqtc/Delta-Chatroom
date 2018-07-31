@@ -81,15 +81,15 @@ public class PageServicer {
 				respFile = new File("./src/cs4310/view/style.css");
 			} else if (f.equals("editprofile.html")) {
 				respFile = new File("./src/cs4310/view/editprofile.html");
-			} else if (f.equals("chatsite.html"){
+			} else if (f.equals("chatsite.html")){
 				respFile = new File("./src/cs4310/view/chatsite.html");
-			} else if (f.equals("register.html"){
+			} else if (f.equals("register.html")){
 				respFile = new File("./src/cs4310/view/register.html");
 			}else 
 			{
-				respFile = new File("./src/cs4310/view/login.html")
+                            respFile = new File("./src/cs4310/view/login.html");
 			}
-			return test;
+			return respFile;
 		}
 	}
 }
