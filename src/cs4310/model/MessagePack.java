@@ -71,7 +71,7 @@ public class MessagePack{
                     "\"author\": \""+author+"\",\n"+
                     "\"message\": \""+message+"\",\n"+
                     "\"posted\": \""+posted+"\",\n"+
-                    "\"edited\": \""+edited+"\"\n"+
+                    "\"edited\": \""+edited+"\",\n"+
                     "\"type\": \""+type+"\"\n"+
                  "}\n";
           return json;

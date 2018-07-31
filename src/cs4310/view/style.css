@@ -154,6 +154,23 @@ nav ul li ul a
     z-index: 1;
 }
 
+p.useronline {
+    width: 50px;
+    height: 30px;
+    position:relative;
+}
+div.userlistbox {
+  margin:0;
+  padding:0;
+  position:absolute;
+  bottom:0;
+}
+
+div::first-line {
+    font-weight:bold;
+}
+
+
 .dropdown-content a {
     color: black;
     padding: 12px 16px;

@@ -49,15 +49,22 @@
 
   <script>
 
-      var socket = new WebSocket( "ws://localhost:8000/" );
+      var ip = "%s";
+      var socket = new WebSocket( "ws://"+ip+":8000/" );
+
 
       // onopen is called when the WebSocket successfully establishes a connection with the server.
       socket.onopen = function( event ) {
           console.log( "Connection was opened!" );
 
           // Once the connection is opened, it is safe to send data to the server through the WebSocket.
-          socket.send( "Test." );
+          // socket.send( "Test." );
       };
+
+      socket.onmessage = function(event)
+      {
+        handleProfile(event);
+      }
 
       function verifyCookie(name)
       {
@@ -70,7 +77,7 @@
             if (cook.indexOf(name) == 0)
                 return cook.substring(name.length,cook.length);
           }
-          return null;
+          return "";
       }
 
       function verifyAllCookie()
@@ -87,6 +94,30 @@
           document.cookie = "loginresult=; expires=Thu, 22 Feb 1990 12:00:00 UTC; path=/";
       }
 
+      function handleProfile( event ) {
+
+         console.log("the received before parsed is :" + event.data);
+         var received = JSON.parse(event.data);
+         var resultLogin = received.result;
+         var resultType = received.type;
+
+         console.log("jsontype is " + resultType);
+
+         if (resultType == "loginresult")
+         {
+             console.log("this is a LOGINRESULT!");
+             if (resultLogin)
+             {
+               alert("You have successfully editted your profile.");
+             }
+             else {
+               alert("Incorrect password! Profile not updated.")
+             }
+
+         }
+     };
+
+
 
       function sendprofile()
       {
@@ -94,15 +125,19 @@
           var firstN = document.getElementById("firstname").value;
           var lastN = document.getElementById("lastname").value;
           var passW = document.getElementById("password").value;
+          var oldU = verifyCookie(username);
           var editprofilejson = {
-            Username: userN,
+            userName: userN,
             firstName: firstN,
             lastName: lastN,
             password: passW,
+            oldUserName: "",
             type: "registration"
-      };
+          };
+          console.log("SUBMITTED INFO");
       socket.send(JSON.stringify(editprofilejson))
    }
+
 
 
  </script>
