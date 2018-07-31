@@ -79,7 +79,7 @@ public class PageServicer {
 			File test = null;
 			if (f.equals("style.css")) {
 				test = new File("./src/cs4310/view/style.css");
-			} else if (f.equals("./src/cs4310/view/editprofile.html")) {
+			} else if (f.equals("editprofile.html")) {
 				test = new File("./src/cs4310/view/editprofile.html");
 			} else{
 				test = new File("./src/cs4310/view/chatsite.html");
