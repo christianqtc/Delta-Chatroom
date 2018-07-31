@@ -33,31 +33,19 @@
         socket.onopen = function( event ) {
             console.log( "Connection was opened!" );
 
-            var reqmsgs =
-            {
-                type: "messagerequest"
-            };
-            // socket.send(JSON.stringify(reqmsgs));
-
             // Once the connection is opened, it is safe to send data to the server through the WebSocket.
 
-            var testmsgs =
+            let loginInfo =
             {
-              author: "username1",
-              message: "testing the messages sent.",
-              posted: "date",
-              edited: "testing",
-              type: "message"
+              userName: verifyCookie( "username" ),
+              password: verifyCookie( "password" ),
+              type: "login"
             };
 
-             socket.send(JSON.stringify(testmsgs));
+            socket.send(JSON.stringify(loginInfo));
         };
 
         console.log( "Attempting to connect!" );
-
-
-
-
 
         // onmessage is called when the WebSocket receives data from the server.
          socket.onmessage = function(event) {
@@ -93,24 +81,24 @@
 
         var ul = "Users Online:" + "<br>";
 
-         function handleMessage( event ) {
-            var chatz = document.getElementById("chatbox").contentDocument;
-            var namez = document.getElementById("userlistbox").innerHTML;
+        function handleMessage( event ) {
+            let chatz = document.getElementById("chatbox").contentDocument;
+            let namez = document.getElementById("userlistbox").innerHTML;
             console.log("the received before parsed is :" + event.data);
-            var received = JSON.parse(event.data);
-            var username = received.author;
-            var text = "";
-            var msg = received.message;
-            var time = received.posted;
-            var timeStamp = Date.now();
-            var d = Date(timeStamp);
-            var jsontype = received.type;
-            var result = received.result;
+            let received = JSON.parse(event.data);
+            let jsontype = received.type;
+            let result = received.result;
 
             console.log("jsontype is " + jsontype);
 
             if (jsontype == "message")
             {
+                let username = received.author;
+                let text = "";
+                let msg = received.message;
+                let time = parseInt(received.posted);
+                let d = Date(time);
+                
                 console.log("this is a message!");
 
 
@@ -123,28 +111,34 @@
                     chatz.write(text);
                     document.getElementById("chatbox").contentWindow;
                 }
+                
+                if (usersArr.includes(username) == false)
+                {
+                    usersArr.push(username);
+                    ul += username + "<br>";
+                    console.log("usersArr is " + usersArr);
+                }
+                document.getElementById("userlistbox").innerHTML = ul;
             }
-            else
+            else if ( jsontype == "loginresult" )
             {
                 console.log("this is a login result!");
 
-                if (result = true)
+                if (result == true)
                 {
-                    createCookie(result);
+                    //createCookie(result);
+                    
+                    var reqmsgs =
+                    {
+                        type: "messagerequest"
+                    };
+                    socket.send(JSON.stringify(reqmsgs));
                 }
 
             }
 
             //console.log("USERNAME IS " + username);
             //console.log("IF STATEMENT " + usersArr.includes(username));
-
-            if (usersArr.includes(username) == false)
-            {
-                usersArr.push(username);
-                ul += username + "<br>";
-                console.log("usersArr is " + usersArr);
-            }
-            document.getElementById("userlistbox").innerHTML = ul;
 
                 //console.log("USERLIST IS " + ul);
             console.log( "Received a message: " + event.data );
@@ -176,8 +170,8 @@
         data : "{\"username\" : \"christianqtc\", \"password\" : \"******\"}"
     };
 
-    var name = verifyCookie(name);
-    console.log(verifyCookie(name));
+    var name = verifyCookie("username");
+    console.log(verifyCookie("username"));
 
 
 

@@ -31,10 +31,10 @@ public class Main
     public static void main( String[] args )
     {
         // For debugging
-        LOGGER.setLevel(Level.INFO);
+        LOGGER.setLevel(Level.FINER);
         
         ConsoleHandler handler = new ConsoleHandler();
-        handler.setLevel(Level.INFO);
+        handler.setLevel(Level.FINER);
         LOGGER.addHandler(handler);
         
         // Hostname

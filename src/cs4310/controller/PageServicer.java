@@ -42,6 +42,7 @@ public class PageServicer {
 	}
 	static class PageHandler implements HttpHandler {
 		HttpServer newServer;
+                @Override
 		public void handle(HttpExchange t) throws IOException {
 			System.out.println("Request Method:\t" + t.getRequestMethod());
 			System.out.println("Request Body:\t" + t.getRequestBody());
@@ -67,7 +68,7 @@ public class PageServicer {
 				while ((count = fileStream.read()) >= 0) {
 					str = str+(char)count;
 				}
-				str = str.replace("%s", this.newServer.getAddress().getHostName());
+				str = str.replace("%s", this.newServer.getAddress().getHostString());
 				t.sendResponseHeaders(200, 0);
 				//System.out.print(str);
 				outStream.write(str.getBytes());

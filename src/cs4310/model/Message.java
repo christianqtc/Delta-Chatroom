@@ -43,7 +43,8 @@ public class Message{
                     "\"author\": \""+author+"\",\n"+
                     "\"message\": \""+message+"\",\n"+
                     "\"posted\": \""+posted+"\",\n"+
-                    "\"edited\": \""+edited+"\"\n"+
+                    "\"edited\": \""+edited+"\",\n"+
+                    "\"type\": \"message\"\n" +
                  "}\n";
           return json;
       }
