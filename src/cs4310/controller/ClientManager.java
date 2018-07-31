@@ -1,5 +1,6 @@
 package cs4310.controller;
 
+import cs4310.Main;
 import cs4310.model.Identify;
 import cs4310.model.LoginPack;
 import cs4310.model.LoginResultPack;
@@ -12,30 +13,17 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ClientManager
 {
     private final ServerSocket gServerSocket;
     
     private final List<Client> gClients = new ArrayList<>();
-    protected static final Logger LOGGER = Logger.getLogger("com.cs4310delta");
-    
-    static
-    {
-        // For debugging
-        LOGGER.setLevel(Level.FINEST);
-        
-        ConsoleHandler handler = new ConsoleHandler();
-        handler.setLevel(Level.FINEST);
-        LOGGER.addHandler(handler);
-    }
     
     private void onStart()
     {
-        System.out.println( "ClientManager started" );
+        log( "ClientManager started" );
     }
     
     synchronized void onOpen( Client client )
@@ -47,7 +35,7 @@ public class ClientManager
     
     synchronized void onMessage( Client client, String data )
     {
-        System.out.println( "Recieved message: " + data );
+        log( Level.FINER, "Recieved message from client " + client.getAddress().toString() + ": " + data );
         
         String type = Identify.type(data);
         switch( type )
@@ -83,7 +71,7 @@ public class ClientManager
             }
             case "message":
             {
-                //if ( client.getUserModel() != null ) // Always check if client is authenticated.
+                if ( client.getUserModel() != null ) // Always check if client is authenticated.
                 {
                     MessagePack packet = new MessagePack( data );
                     if ( packet.author != null && packet.message != null && packet.message.length() > 0 )
@@ -263,5 +251,15 @@ public class ClientManager
             client.gThread = clientWorkerThread;
             clientWorkerThread.start();
         }
+    }
+    
+    public void log( String msg )
+    {
+        log( Level.INFO, msg );
+    }
+    
+    public void log( Level level, String msg )
+    {
+        Main.LOGGER.log( level, "ClientManager: {0}", msg );
     }
 }
