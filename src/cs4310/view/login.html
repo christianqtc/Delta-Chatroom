@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Login</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Palanquin" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Bad+Script" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<style type="text/css">
+
+	* {
+		box-sizing: border-box;
+	}
+
+	h1 {
+		font-family: fantasy;
+		font-size: 4em;
+		border-bottom: 3px solid pink;
+		border-right: 3px solid pink;
+		width: 530px;
+		text-align: center;
+		margin-top: 12px;
+	}
+
+	h2 {
+		font-family: 'Bad Script', cursive;
+		font-size: 2.25em;
+		font-weight: bold;
+		text-align: left;
+		margin-top: 12px;
+	}
+
+	label {
+		font-family: 'Palanquin', sans-serif;
+		font-size: 1.75em;
+		text-align: left;
+		padding: 12px 12px 12px 0;
+		display: inline-block;
+	}
+
+	input[type=text], [type=password] {
+		width: 75%;
+		padding: 12px;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		resize: vertical;
+	}
+
+	#Login {
+		background-color: #4CAF50;
+		color: white;
+		padding: 12px 30px;
+		padding: 20px 50px 20px 50px 70;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		float: right;
+	}
+
+	#Login:hover {
+		background-color: #45a049
+	}
+
+	body {
+		background-color: #cccccc;
+	}
+
+	.container {
+		border-radius: 5px;
+		background-color: #f2f2f2;
+		padding: 50px;
+	}
+
+	.sm-col {
+		float: left;
+		width: 25%;
+		margin-top: 16px;
+	}
+
+	.lg-col {
+		float: left;
+		width: 52%;
+		margin-top: 16px;
+	}
+
+	.full-col {
+		float: center;
+		width: 80%;
+
+	}
+
+	.row:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+
+	.button {
+		float: right;
+	}
+
+	.search {
+		float: right;
+	}
+
+	#loginError{
+		display: none;
+		position: relative;
+		padding: 10px;
+		margin-top: 10px;
+	}
+
+	#loginError p{
+		padding: 10px 10px;
+		font-size: 16px;
+		display:
+	}
+
+	</style>
+</head>
+<!-- <body onload="socketConnection()"> -->
+<body>
+	<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="login.html">Delta Chatroom</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+			<div class="navbar-nav">
+				<a class="nav-item nav-link active" href="login.html">Login Page <span class="sr-only">(current)</span></a>&emsp;
+				<a class="nav-item nav-link" href="register.html">Create an Account </a>&emsp;
+				<a class="nav-item nav-link" href="resetCredentials.html">Forgot my Credentials </a>&emsp;
+				<a class="nav-item nav-link" href="chatsite.html">Home Page </a>&emsp;
+				<a class="nav-item nav-link" href="editprofile.html">Profile Page </a>&emsp;
+				<a class="nav-item nav-link disabled" href="about.html">About Us </a>&emsp;&emsp;&emsp;
+				<form class="form-inline my-2 my-lg-0">
+					<div class="search"><input class="form-control mr-sm-2" type="search" placeholder="Search for Users" aria-label="Search"></div>
+					<div class="search"><button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button></div>
+				</form>
+			</div>
+		</div>
+	</nav>
+
+
+	<div class="jumbotron">
+
+		<h1 class="display-4">Delta Chatroom</h1>
+		<br><br>
+		<h2>Welcome to the Delta Chatroom, A completly private instant chatting service.</h2>
+		<h2>Login to your account or create a new free account now.</h2>
+		<hr class="my-4">
+		<br><br><br>
+		<p>
+			<div class=".fixed-bottom">
+				<div class="container">
+					<form method="POST" action="">
+
+						<div class="row">
+							<div class="full-col">
+								<div class="alert alert-danger" id="loginError" role="alert">
+									<p>Error: Incorrect Username or Password.</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="sm-col">
+								<label for="userName">User Name:</label>
+							</div>
+							<div class="lg-col">
+								<input type="text" id="userName" name="userName" placeholder="Enter your user name ..." required>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="sm-col">
+								<label for="password">Password:</label>
+							</div>
+							<div class="lg-col">
+								<input type="password" id="password" name="password" placeholder="Enter your password ..." required>
+							</div>
+						</div>
+
+						<br><br><br>
+						<div class="row">
+							&emsp;&emsp;
+							<button type="reset" class="btn btn-primary btn-lg">Reset</button>
+							&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+							<center><a onclick="register();" class="btn btn-primary btn-lg" id="Login" href="#" role="button">Login</a></center>
+						</div>
+						<br><br><br><br>
+					</form>
+				</div>
+			</div>
+		</p>
+
+		<div class="link">
+			<a class="btn btn-secondary btn-lg" href="register.html" role="button">Create an Account</a>&emsp;&emsp;&emsp;&emsp;
+			<a class="btn btn-secondary btn-lg" href="resetCredentials.html" role="button">Forgot my Credentials</a>
+		</div></div>
+
+		<script type="text/javascript">
+
+
+var socket = new WebSocket("ws://localhost:8000/");
+
+		socket.onmessage = function(event) {
+			console.log("onmessage function reached");
+			handleLogin(event);
+		}
+
+		console.log("starting to connect");
+
+		socket.onopen = function(event) {
+			console.log("connection successful!");
+		}
+
+		socket.onerror = function(error) {
+			console.log('Websocket Error: ' + error);
+			alert("Problem with connection of WebSocket. \n Please check your console log for details.");
+		}
+
+		function verifyCookie(name)
+		{
+				var name = name + "=";
+				var seperate = document.cookie.split(';');
+				for(var i = 0; i < seperate.length; i++) {
+					var cook = seperate[i];
+					while (cook.charAt(0)==' ')
+							cook = cook.substring(1,cook.length);
+					if (cook.indexOf(name) == 0)
+							return cook.substring(name.length,cook.length);
+				}
+				return null;
+		}
+
+		function register() {
+			var user = document.getElementById("userName").value;
+			var pass = document.getElementById("password").value;
+			console.log("correctly registered");
+			var login = {
+				"userName" : user,
+				"password" : pass,
+				"type" : "login"
+			};
+
+			socket.send(JSON.stringify(login));
+			console.log("JSON Package Sent");
+		}
+
+		function handleLogin(event) {
+			console.log("handleLogin function successful");
+			console.log(JSON.parse(event.data).type);
+
+			var recievedResult = JSON.parse(event.data);
+			console.log(recievedResult);
+
+			var type = recievedResult.type;
+			var result = recievedResult.result;
+
+			if(result == true){
+				console.log("Login Result: True");
+
+				function createCookie(username) {
+						var UserName = document.getElementById("userName");
+						var Password = document.getElementById("password");
+		        var d = new Date();
+		        d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
+		        document.cookie = "username="+ UserName +"; path=/";
+		        document.cookie = "password="+ Password +"; path=/";
+		        document.cookie = "loginresult=true; path=/";
+		        alert("Cookies test... set to name= " + username);
+		        console.log("cookies created..");
+		    }
+				window.location.href = "chatsite.html";
+
+			} else {
+				alert("Login Result: False \n \n \t You have entered and Invalid Username and/or Password");
+
+				function createCookie(username) {
+						var UserName = document.getElementById("userName");
+						var Password = document.getElementById("password");
+		        var d = new Date();
+		        d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
+		        document.cookie = "username=" + UserName + "; path=/";
+		        document.cookie = "password=" + Password + "; path=/";
+		        document.cookie = "loginresult=false; path=/";
+		        alert("Cookies test... set to name= " + username);
+		        console.log("cookies created..");
+		    }
+				// if(verifyCookie(loginresult) == "false"){
+				// 	document.getElementById("loginError").style.display = "block";
+				// }
+				window.location.href = "login.html";
+			}
+		}
+
+		</script>
+
+	</body>
+	</html>
