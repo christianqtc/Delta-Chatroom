@@ -8,6 +8,7 @@ public class RegistrationPack{
       public String firstName;
       public String lastName;
       public String password;
+      public String oldUserName;
       public String type;
       public RegistrationPack(String json){
             Scanner scanner = new Scanner(json);
@@ -48,6 +49,14 @@ public class RegistrationPack{
             if (scanner.hasNext()){scanner.next();}
             if (scanner.hasNext()){scanner.next();}
             if (scanner.hasNext()){this.password = scanner.next();}
+
+            //oldPassword
+            scanner.useDelimiter("oldUserName");
+            if (scanner.hasNext()){scanner.next();}
+            scanner.useDelimiter("\"");
+            if (scanner.hasNext()){scanner.next();}
+            if (scanner.hasNext()){scanner.next();}
+            if (scanner.hasNext()){this.oldUserName = scanner.next();}
 
             //Type
             scanner.useDelimiter("type");
