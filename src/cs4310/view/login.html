@@ -253,6 +253,18 @@ var socket = new WebSocket("ws://%s:8000/");
 			console.log("JSON Package Sent");
 		}
 
+		function createCookie() {
+				var UserName = document.getElementById("userName").value;
+				var Password = document.getElementById("password").value;
+				var d = new Date();
+				d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
+				document.cookie = "username="+ UserName +"; path=/";
+				document.cookie = "password="+ Password +"; path=/";
+				document.cookie = "loginresult=true; path=/";
+				alert("Cookies test... set to name= " + UserName);
+				console.log("cookies created..");
+		}
+
 		function handleLogin(event) {
 			console.log("handleLogin function successful");
 			console.log(JSON.parse(event.data).type);
@@ -263,38 +275,17 @@ var socket = new WebSocket("ws://%s:8000/");
 			var type = recievedResult.type;
 			var result = recievedResult.result;
 
+
 			if(result == true){
 				console.log("Login Result: True");
+				createCookie();
 
-				function createCookie(username) {
-						var UserName = document.getElementById("userName").value;
-						var Password = document.getElementById("password").value;
-		        var d = new Date();
-		        d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
-		        document.cookie = "username="+ UserName +"; path=/";
-		        document.cookie = "password="+ Password +"; path=/";
-		        document.cookie = "loginresult=true; path=/";
-		        alert("Cookies test... set to name= " + username);
-		        console.log("cookies created..");
-		    }
 				window.location.href = "chatsite.html";
 
 			} else {
 				alert("Login Result: False \n \n \t You have entered and Invalid Username and/or Password");
 
-				function createCookie(username) {
-						var UserName = document.getElementById("userName").value;
-						var Password = document.getElementById("password").value;
-						console.log("COOKIE USERNAME IS " + UserName);
-						console.log("COOKIE PASSWORD" + Password);
-		        var d = new Date();
-		        d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
-		        document.cookie = "username=" + UserName + "; path=/";
-		        document.cookie = "password=" + Password + "; path=/";
-		        document.cookie = "loginresult=false; path=/";
-		        alert("Cookies test... set to name= " + username);
-		        console.log("cookies created..");
-		    }
+
 				// if(verifyCookie(loginresult) == "false"){
 				// 	document.getElementById("loginError").style.display = "block";
 				// }
