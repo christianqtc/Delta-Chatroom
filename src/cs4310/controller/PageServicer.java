@@ -59,7 +59,6 @@ public class PageServicer {
 				outStream.flush();
 				outStream.close();
 			} else {
-				t.sendResponseHeaders(200, 0);
 				OutputStream outStream = t.getResponseBody();
 				FileInputStream fileStream = new FileInputStream(file);
 				final byte[] buffer = new byte[0x10000];
@@ -68,7 +67,8 @@ public class PageServicer {
 					str = str+(char)count;
 				}
 				str = str.replace("%s", this.newServer.getAddress().getHostName());
-				System.out.print(str);
+				t.sendResponseHeaders(200, str.length());
+				//System.out.print(str);
 				outStream.write(str.getBytes());
 				outStream.flush();
 				outStream.close();
@@ -76,15 +76,20 @@ public class PageServicer {
 			}
 		}
 		private File getPageFile(String f) {
-			File test = null;
+			File respFile = null;
 			if (f.equals("style.css")) {
-				test = new File("./src/cs4310/view/style.css");
+				respFile = new File("cs4310/view/style.css");
 			} else if (f.equals("editprofile.html")) {
-				test = new File("./src/cs4310/view/editprofile.html");
-			} else{
-				test = new File("./src/cs4310/view/chatsite.html");
+				respFile = new File("cs4310/view/editprofile.html");
+			} else if (f.equals("chatsite.html")){
+				respFile = new File("cs4310/view/chatsite.html");
+			} else if (f.equals("register.html")){
+				respFile = new File("cs4310/view/register.html");
+			}else 
+			{
+                            respFile = new File("cs4310/view/login.html");
 			}
-			return test;
+			return respFile;
 		}
 	}
 }
