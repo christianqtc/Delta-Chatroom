@@ -135,7 +135,7 @@
 				<a class="nav-item nav-link active" href="login.html">Login Page <span class="sr-only">(current)</span></a>&emsp;
 				<a class="nav-item nav-link" href="register.html">Create an Account </a>&emsp;
 				<a class="nav-item nav-link" href="resetCredentials.html">Forgot my Credentials </a>&emsp;
-				<a class="nav-item nav-link" href="chatsite.html">Home Page </a>&emsp;
+				<a class="nav-item nav-link disabled" href="chatsite.html">Home Page </a>&emsp;
 				<a class="nav-item nav-link" href="editprofile.html">Profile Page </a>&emsp;
 				<a class="nav-item nav-link disabled" href="about.html">About Us </a>&emsp;&emsp;&emsp;
 				<form class="form-inline my-2 my-lg-0">
@@ -207,7 +207,7 @@
 		<script type="text/javascript">
 
 
-var socket = new WebSocket("ws://localhost:8000/");
+var socket = new WebSocket("ws://%s:8000/");
 
 		socket.onmessage = function(event) {
 			console.log("onmessage function reached");
@@ -267,8 +267,8 @@ var socket = new WebSocket("ws://localhost:8000/");
 				console.log("Login Result: True");
 
 				function createCookie(username) {
-						var UserName = document.getElementById("userName");
-						var Password = document.getElementById("password");
+						var UserName = document.getElementById("userName").value;
+						var Password = document.getElementById("password").value;
 		        var d = new Date();
 		        d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
 		        document.cookie = "username="+ UserName +"; path=/";
@@ -283,8 +283,10 @@ var socket = new WebSocket("ws://localhost:8000/");
 				alert("Login Result: False \n \n \t You have entered and Invalid Username and/or Password");
 
 				function createCookie(username) {
-						var UserName = document.getElementById("userName");
-						var Password = document.getElementById("password");
+						var UserName = document.getElementById("userName").value;
+						var Password = document.getElementById("password").value;
+						console.log("COOKIE USERNAME IS " + UserName);
+						console.log("COOKIE PASSWORD" + Password);
 		        var d = new Date();
 		        d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
 		        document.cookie = "username=" + UserName + "; path=/";
