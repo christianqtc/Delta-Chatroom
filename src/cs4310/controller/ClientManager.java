@@ -118,10 +118,11 @@ public class ClientManager
                     }
                     else
                     {
-                        if ( query.password.equals( packet.password ) )
+                        if ( query.password.equals( packet.password ) &&
+                                packet.oldUserName != null && packet.oldUserName.length() > 0 )
                         {
                             // TODO: Edit details in database.
-                            User.removeFromDB(packet.userName);
+                            User.removeFromDB(packet.oldUserName);
                             User user = new User( packet );
                             user.addToDB();
                             client.setUserModel(user);
