@@ -261,7 +261,7 @@ var socket = new WebSocket("ws://%s:8000/");
 				document.cookie = "username="+ UserName +"; path=/";
 				document.cookie = "password="+ Password +"; path=/";
 				document.cookie = "loginresult=true; path=/";
-				alert("Cookies test... set to name= " + UserName);
+				// alert("Cookies test... set to name= " + UserName);
 				console.log("cookies created..");
 		}
 
@@ -275,21 +275,22 @@ var socket = new WebSocket("ws://%s:8000/");
 			var type = recievedResult.type;
 			var result = recievedResult.result;
 
+			if (type == "loginresult") {
+				if(result == true){
+					console.log("Login Result: True");
+					createCookie();
 
-			if(result == true){
-				console.log("Login Result: True");
-				createCookie();
+					window.location.href = "chatsite.html";
 
-				window.location.href = "chatsite.html";
-
-			} else {
-				alert("Login Result: False \n \n \t You have entered and Invalid Username and/or Password");
+				} else {
+					alert("Login Result: False \n \n \t You have entered and Invalid Username and/or Password");
 
 
-				// if(verifyCookie(loginresult) == "false"){
-				// 	document.getElementById("loginError").style.display = "block";
-				// }
-				window.location.href = "login.html";
+					// if(verifyCookie(loginresult) == "false"){
+					// 	document.getElementById("loginError").style.display = "block";
+					// }
+					window.location.href = "login.html";
+				}
 			}
 		}
 
