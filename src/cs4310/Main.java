@@ -8,16 +8,18 @@ package cs4310;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import cs4310.controller.ClientManager;
+import cs4310.controller.PageServicer;
 import java.util.Scanner;
 
 /**
  *
  * @author nikol
  */
-public class Main
+public class Main 
 {
     static Thread cmThread;
-
+    static Thread psThread;
+    
     public static void main( String[] args )
     {
         String hostName;
@@ -25,7 +27,7 @@ public class Main
             hostName = args[0];
         else
             hostName = "localhost";
-
+        
         // Initialize ClientManager module.
         ClientManager cm;
         try
@@ -37,27 +39,39 @@ public class Main
             e.printStackTrace();
             return;
         }
-
-        cmThread = new Thread() {
+        
+        cmThread = new Thread() { 
             @Override
             public void run() {
                 cm.run();
             }
         };
-
+        
         cmThread.setDaemon(true);
+        
+        psThread = new Thread() {
+            @Override
+            public void run() {
+                PageServicer ps = new PageServicer( new InetSocketAddress( hostName, 80 ) );
+            }
+        };
+        
+        psThread.setDaemon(true);
+        
+        // Start the threads.
         cmThread.start();
+        psThread.start();
 
         Scanner in = new Scanner( System.in );
-
+        
         System.out.println( "The chatserver has been started." );
-
+        
         while ( true )
         {
             System.out.print("> ");
-            String line = in.nextLine();
-            if(line.equals("poweroff")){
-                  break;
+            String line = in.nextLine().trim();
+            if ( line.equalsIgnoreCase( "poweroff" ) ) {
+                break;
             }
         }
     }
