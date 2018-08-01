@@ -290,7 +290,7 @@ background-color: #f2f2f2;
 <br><br>
 
 <input id="msgBox" type="text" name="text" rows="4" cols="50" size="75" maxlength="256" placeholder="Chat with us!" autocomplete="off">&emsp;&emsp;
-  <input type="button" class="btn btn-success btn-lg" id="send" name="send" value="Send" onclick="sendmessage()"></p></td>
+  <input type="button" class="btn btn-success btn-lg" id="send" name="send" value="Send" onclick="sendmessage(); clearmsg();"></p></td>
 
 
     </ul>
@@ -360,6 +360,16 @@ background-color: #f2f2f2;
 
         var ul = "Users Online:" + "<br>";
 
+//         document.getElementById("msgBox").addEventListener("keydown", function(e) {
+//     if (!e) { var e = window.event; }
+//
+//     // Enter is pressed
+//     if (e.keyCode == 13) { submitFunction(); }
+// }, false);
+
+          function clearmsg() {
+            document.getElementById("msgBox").value="";
+          }
 
         // handles the messages that are being sent from the server back to client
          function handleMessage( event ) {
@@ -477,20 +487,22 @@ background-color: #f2f2f2;
           type: "message"
         };
 
-        document.getElementById("msgBox")
-        .addEventListener("keyup", function(event) {
-        event.preventDefault();
-        if (event.keyCode === 13) {
-           console.log("ENTER BUTTON PUSHED");
-            document.getElementById("msgBox").click();
-            sendmessage();
-        }
-    });
+
 
         socket.send(JSON.stringify(msgjson));
 
     };
 
+    document.getElementById("msgBox")
+    .addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+       console.log("ENTER BUTTON PUSHED");
+        document.getElementById("msgBox").click();
+        sendmessage();
+        clearmsg();
+    }
+});
 
     function displaymessage()
     {
