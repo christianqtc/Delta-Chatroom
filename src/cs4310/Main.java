@@ -35,10 +35,6 @@ public class Main
         // For debugging
         LOGGER.setLevel(Level.INFO);
         
-        ConsoleHandler handler = new ConsoleHandler();
-        handler.setLevel(Level.INFO);
-        LOGGER.addHandler(handler);
-        
         // Hostname
         String hostName;
         if ( args.length >= 1 )
@@ -134,7 +130,6 @@ public class Main
                             try {
                                 Level logLevel = Level.parse( cmdArgs.get(1) );
                                 LOGGER.setLevel(logLevel);
-                                handler.setLevel(logLevel);
                                 System.out.println( "Log level set to " + logLevel.toString() );
                             } catch ( IllegalArgumentException e )
                             {
