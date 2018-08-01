@@ -9,7 +9,12 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import cs4310.controller.ClientManager;
 import cs4310.controller.PageServicer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,13 +25,44 @@ public class Main
     static Thread cmThread;
     static Thread psThread;
     
+    public static final Logger LOGGER = Logger.getLogger("com.cs4310delta");
+    private static boolean usingSrcAsCWD = true;
+    
+    public static boolean isUsingSrcFolderAsCWD() { return usingSrcAsCWD; }
+    
     public static void main( String[] args )
     {
+        // For debugging
+        LOGGER.setLevel(Level.FINER);
+        
+        ConsoleHandler handler = new ConsoleHandler();
+        handler.setLevel(Level.FINER);
+        LOGGER.addHandler(handler);
+        
+        // Hostname
         String hostName;
         if ( args.length >= 1 )
             hostName = args[0];
         else
             hostName = "localhost";
+        
+        // CWD setting
+        if ( args.length >= 2 )
+        {
+            if ( args[1] != null && args[1].length() > 0 )
+            {
+                try
+                {
+                    int value = Integer.parseInt( args[1] );
+                    if ( value == 0 )
+                        usingSrcAsCWD = false;
+                }
+                catch ( NumberFormatException e )
+                {
+                    // Don't do anything. Assume true.
+                }
+            }
+        }
         
         // Initialize ClientManager module.
         ClientManager cm;
@@ -49,6 +85,7 @@ public class Main
         
         cmThread.setDaemon(true);
         
+        // Initialize PageServicer module.
         psThread = new Thread() {
             @Override
             public void run() {
@@ -66,12 +103,46 @@ public class Main
         
         System.out.println( "The chatserver has been started." );
         
-        while ( true )
+        boolean running = true;
+        
+        // Admin command loop.
+        while ( running )
         {
             System.out.print("> ");
             String line = in.nextLine().trim();
-            if ( line.equalsIgnoreCase( "poweroff" ) ) {
-                break;
+            
+            Scanner sLine = new Scanner( line );
+            List<String> cmdArgs = new ArrayList<>();
+            while ( sLine.hasNext() )
+                cmdArgs.add(sLine.next());
+            
+            if ( cmdArgs.size() > 0 )
+            {
+                String cmdName = cmdArgs.get(0).toLowerCase();
+                
+                switch ( cmdName )
+                {
+                    case "poweroff":
+                    {
+                        running = false;
+                        break;
+                    }
+                    case "log_setlevel":
+                    {
+                        if ( cmdArgs.size() >= 2 )
+                        {
+                            try {
+                                Level logLevel = Level.parse( cmdArgs.get(1) );
+                                LOGGER.setLevel(logLevel);
+                                handler.setLevel(logLevel);
+                                System.out.println( "Log level set to " + logLevel.toString() );
+                            } catch ( IllegalArgumentException e )
+                            {
+                                System.out.println( "Invalid log level specified" );
+                            }
+                        }
+                    }
+                }
             }
         }
     }

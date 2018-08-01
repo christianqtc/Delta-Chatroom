@@ -1,5 +1,6 @@
 package cs4310.controller;
 
+import cs4310.Main;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -75,7 +76,7 @@ public class Client
     
     public void log( Level level, String msg )
     {
-        ClientManager.LOGGER.log( level, "{0}: {1}", new Object[] { getAddress().toString(), msg }  );
+        Main.LOGGER.log( level, "{0}: {1}", new Object[] { getAddress().toString(), msg }  );
     }
     
     /*
@@ -116,7 +117,7 @@ public class Client
     
     private void ws_log( String msg )
     {
-        System.out.println( msg );
+        Main.LOGGER.log( Level.FINEST, msg );
     }
     
     // Perform the WebSocket handshake. True if successful, false otherwise.

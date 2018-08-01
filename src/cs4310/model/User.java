@@ -1,4 +1,5 @@
 package cs4310.model;
+import cs4310.Main;
 import cs4310.model.RegistrationPack;
 import java.util.Scanner;
 import java.util.NoSuchElementException;
@@ -38,7 +39,12 @@ public class User{
       }
       //Constructor based on userName
       public User(String userName){
-            File userDB = new File("Database/Users.dat");
+            File userDB;
+            if ( Main.isUsingSrcFolderAsCWD() )
+                userDB = new File("Database/Users.dat");
+            else
+                userDB = new File("src/Database/Users.dat");
+            
             Scanner scanner = null;
             try {
                   scanner = new Scanner(userDB);
@@ -95,7 +101,12 @@ public class User{
       }
 
       public static void removeFromDB(String targ){
-            File userDB = new File("Database/Users.dat");
+            File userDB;
+            if ( Main.isUsingSrcFolderAsCWD() )
+                userDB = new File("Database/Users.dat");
+            else
+                userDB = new File("src/Database/Users.dat");
+            
             Scanner scanner = null;
             try {
                   scanner = new Scanner(userDB);
@@ -150,7 +161,12 @@ public class User{
       public void addToDB(){
             //Users.dat must have at least one user before using this function or else json will be corrupted.
             //Create file object
-            File userDB = new File("Database/Users.dat");
+            File userDB;
+            if ( Main.isUsingSrcFolderAsCWD() )
+                userDB = new File("Database/Users.dat");
+            else
+                userDB = new File("src/Database/Users.dat");
+            
             //Create Scanner to grab everything before the closing bracket
             Scanner scanner = null;
             try {

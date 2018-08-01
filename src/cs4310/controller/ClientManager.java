@@ -1,5 +1,6 @@
 package cs4310.controller;
 
+import cs4310.Main;
 import cs4310.model.Identify;
 import cs4310.model.LoginPack;
 import cs4310.model.LoginResultPack;
@@ -12,30 +13,17 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ClientManager
 {
     private final ServerSocket gServerSocket;
     
     private final List<Client> gClients = new ArrayList<>();
-    protected static final Logger LOGGER = Logger.getLogger("com.cs4310delta");
-    
-    static
-    {
-        // For debugging
-        LOGGER.setLevel(Level.FINEST);
-        
-        ConsoleHandler handler = new ConsoleHandler();
-        handler.setLevel(Level.FINEST);
-        LOGGER.addHandler(handler);
-    }
     
     private void onStart()
     {
-        System.out.println( "ClientManager started" );
+        log( "ClientManager started" );
     }
     
     synchronized void onOpen( Client client )
@@ -47,7 +35,7 @@ public class ClientManager
     
     synchronized void onMessage( Client client, String data )
     {
-        System.out.println( "Recieved message: " + data );
+        log( Level.FINER, "Recieved message from client " + client.getAddress().toString() + ": " + data );
         
         String type = Identify.type(data);
         switch( type )
@@ -70,6 +58,9 @@ public class ClientManager
                             // Send success response.
                             LoginResultPack responsePacket = new LoginResultPack( true );
                             client.send( responsePacket.toJson() );
+                            
+                            client.log( "Successfully logged in as " + user.userName );
+                            
                             break;
                         }
                     }
@@ -83,7 +74,7 @@ public class ClientManager
             }
             case "message":
             {
-                //if ( client.getUserModel() != null ) // Always check if client is authenticated.
+                if ( client.getUserModel() != null ) // Always check if client is authenticated.
                 {
                     MessagePack packet = new MessagePack( data );
                     if ( packet.author != null && packet.message != null && packet.message.length() > 0 )
@@ -105,33 +96,45 @@ public class ClientManager
                 if ( packet.userName != null && packet.userName.length() > 0 && 
                         packet.password != null && packet.password.length() > 0 )
                 {
+                    // If an oldUserName field is provided (length is > 0), user is trying to change details.
+                    boolean changing = packet.oldUserName.length() > 0;
+                    
                     User query = new User( packet.userName );
-                    if ( query.userName == null ) // first check if user exists in DB
+                    if ( query.userName == null || 
+                            ( changing && query.userName.equals( packet.oldUserName ) ) ) // first check if user exists in DB
                     {
-                        // Make a new User model and add to the database.
-                        User user = new User( packet );
-                        user.addToDB();
-                        client.setUserModel(user);
-                        
-                        // Send success response.
-                        LoginResultPack responsePacket = new LoginResultPack( true );
-                        client.send( responsePacket.toJson() );
-                        break;
-                    }
-                    else
-                    {
-                        if ( query.password.equals( packet.password ) &&
-                                packet.oldUserName != null && packet.oldUserName.length() > 0 )
+                        boolean success = false;
+                        if ( changing )
                         {
-                            // TODO: Edit details in database.
-                            User.removeFromDB(packet.oldUserName);
+                            User oldQuery = new User( packet.oldUserName ); // oldUserName is required.
+                            if ( oldQuery.userName != null && oldQuery.password.equals( packet.password ) )
+                            {
+                                // Delete the User from the DB.
+                                User.removeFromDB( packet.oldUserName );
+                                success = true;
+                            }
+                        }
+                        else
+                        {
+                            success = true;
+                        }
+                        
+                        if ( success )
+                        {
+                            // Make a new User and add to the database.
                             User user = new User( packet );
                             user.addToDB();
                             client.setUserModel(user);
-                            
+
                             // Send success response.
                             LoginResultPack responsePacket = new LoginResultPack( true );
                             client.send( responsePacket.toJson() );
+                            
+                            if ( changing )
+                                client.log( "Changed details of their account." );
+                            else
+                                client.log( "Successfully registered a new account as " + user.userName );
+                            
                             break;
                         }
                     }
@@ -263,5 +266,15 @@ public class ClientManager
             client.gThread = clientWorkerThread;
             clientWorkerThread.start();
         }
+    }
+    
+    public void log( String msg )
+    {
+        log( Level.INFO, msg );
+    }
+    
+    public void log( Level level, String msg )
+    {
+        Main.LOGGER.log( level, "ClientManager: {0}", msg );
     }
 }

@@ -8,6 +8,7 @@ import java.net.InetSocketAddress;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import cs4310.Main;
 /*
  * This class instantiates the HTTP Server and handles the page request
  */
@@ -41,6 +42,7 @@ public class PageServicer {
 	}
 	static class PageHandler implements HttpHandler {
 		HttpServer newServer;
+                @Override
 		public void handle(HttpExchange t) throws IOException {
 			System.out.println("Request Method:\t" + t.getRequestMethod());
 			System.out.println("Request Body:\t" + t.getRequestBody());
@@ -66,7 +68,7 @@ public class PageServicer {
 				while ((count = fileStream.read()) >= 0) {
 					str = str+(char)count;
 				}
-				str = str.replace("%s", this.newServer.getAddress().getHostName());
+				str = str.replace("%s", this.newServer.getAddress().getHostString());
 				t.sendResponseHeaders(200, 0);
 				//System.out.print(str);
 				outStream.write(str.getBytes());
@@ -78,17 +80,33 @@ public class PageServicer {
 		private File getPageFile(String f) {
 			File respFile = null;
 			if (f.equals("style.css")) {
+                            if ( Main.isUsingSrcFolderAsCWD() )
 				respFile = new File("cs4310/view/style.css");
+                            else
+                                respFile = new File("src/cs4310/view/style.css");
 			} else if (f.equals("editprofile.html")) {
+                            if ( Main.isUsingSrcFolderAsCWD() )
 				respFile = new File("cs4310/view/editprofile.html");
+                            else
+                                respFile = new File("src/cs4310/view/editprofile.html");
 			} else if (f.equals("chatsite.html")){
+                            if ( Main.isUsingSrcFolderAsCWD() )
 				respFile = new File("cs4310/view/chatsite.html");
+                            else
+                                respFile = new File("src/cs4310/view/chatsite.html");
 			} else if (f.equals("register.html")){
+                            if ( Main.isUsingSrcFolderAsCWD() )
 				respFile = new File("cs4310/view/register.html");
-			}else
+                            else
+                                respFile = new File("src/cs4310/view/register.html");
+			}else 
 			{
-                            respFile = new File("cs4310/view/login.html");
+                            if ( Main.isUsingSrcFolderAsCWD() )
+                                respFile = new File("cs4310/view/login.html");
+                            else
+                                respFile = new File("src/cs4310/view/login.html");
 			}
+                        
 			return respFile;
 		}
 	}
