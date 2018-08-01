@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import cs4310.controller.ClientManager;
 import cs4310.controller.PageServicer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
@@ -101,13 +103,46 @@ public class Main
         
         System.out.println( "The chatserver has been started." );
         
+        boolean running = true;
+        
         // Admin command loop.
-        while ( true )
+        while ( running )
         {
             System.out.print("> ");
             String line = in.nextLine().trim();
-            if ( line.equalsIgnoreCase( "poweroff" ) ) {
-                break;
+            
+            Scanner sLine = new Scanner( line );
+            List<String> cmdArgs = new ArrayList<>();
+            while ( sLine.hasNext() )
+                cmdArgs.add(sLine.next());
+            
+            if ( cmdArgs.size() > 0 )
+            {
+                String cmdName = cmdArgs.get(0).toLowerCase();
+                
+                switch ( cmdName )
+                {
+                    case "poweroff":
+                    {
+                        running = false;
+                        break;
+                    }
+                    case "log_setlevel":
+                    {
+                        if ( cmdArgs.size() >= 2 )
+                        {
+                            try {
+                                Level logLevel = Level.parse( cmdArgs.get(1) );
+                                LOGGER.setLevel(logLevel);
+                                handler.setLevel(logLevel);
+                                System.out.println( "Log level set to " + logLevel.toString() );
+                            } catch ( IllegalArgumentException e )
+                            {
+                                System.out.println( "Invalid log level specified" );
+                            }
+                        }
+                    }
+                }
             }
         }
     }
