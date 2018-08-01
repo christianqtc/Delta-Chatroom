@@ -129,7 +129,7 @@
 		.fufilled:before {
 			position: relative;
 			left: -40px;
-    		content: "✔";
+    		/* content: "✔"; */
 		}
 
 .required {
@@ -139,7 +139,7 @@
 .required:before {
     position: relative;
     left: -40px;
-    content: "❌";
+    /* content: "❌"; */
 }
   	</style>
 </head>
@@ -385,22 +385,23 @@
 		}
 
 		socket.onmessage = function(event){
-			 var received = JSON.parse(event.data);
-			 var results = received.result;
-			 var type = received.type;
+			var received = JSON.parse(event.data);
+			var results = received.result;
+			var type = received.type;
 
-			 console.log("message type received: " + type);
-			 console.log("login result received: " + results);
-
-			 if (results == true)
-			 {
-				 alert("Successfully created account!");
-				 clearfields();
-			 }
-			 else {
-			 	 alert("Username already exists please try another!");
-				 clearusername();
-			 }
+			console.log("message type received: " + type);
+			console.log("login result received: " + results);
+			if (type == "loginresult"){
+				if (results == true)
+				{
+					alert("Successfully created account!");
+					clearfields();
+				}
+				else {
+					alert("Username already exists please try another!");
+					clearusername();
+				}
+			}
 		}
 
 		function clearfields() {
