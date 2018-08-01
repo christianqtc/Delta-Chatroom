@@ -81,16 +81,27 @@
 
         var ul = "Users Online:" + "<br>";
 
-        function handleMessage( event ) {
-            let chatz = document.getElementById("chatbox").contentDocument;
-            let namez = document.getElementById("userlistbox").innerHTML;
+
+        // handles the messages that are being sent from the server back to client
+         function handleMessage( event ) {
+            var chatz = document.getElementById("chatbox").contentDocument;
+            var namez = document.getElementById("userlistbox").innerHTML;
             console.log("the received before parsed is :" + event.data);
-            let received = JSON.parse(event.data);
-            let jsontype = received.type;
-            let result = received.result;
+            var received = JSON.parse(event.data);
+            var username = received.author;
+            var text = "";
+            var msg = received.message;
+            var time = received.posted;
+            var timeStamp = Date.now();
+            var d = Date(timeStamp);
+            var dstring = d.toString();
+            var dshort = dstring.substring(0,24);
+            var jsontype = received.type;
+            var result = received.result;
 
             console.log("jsontype is " + jsontype);
 
+            // Displays the message only if json type received is a message.
             if (jsontype == "message")
             {
                 let username = received.author;
@@ -101,8 +112,7 @@
                 
                 console.log("this is a message!");
 
-
-                text = "(" + d.toString() + ") <b>" + username + "</b>: " + msg + "<br>";
+                text = "(" + dshort + ") <b>" + username + "</b>: " + msg + "<br>";
 
 
 
@@ -178,10 +188,12 @@
     function sendmessage()
     {
         var textMessage = document.getElementById("msgBox").value;
+        var datetext = Date.now().toString().substring(0,15);
+        console.log("THE DATE IS " + datetext);
         var msgjson = {
           author: verifyCookie("username"),
           message: textMessage,
-          posted: Date.now().toString(),
+          posted: datetext,
           edited: "",
           type: "message"
         };
@@ -234,7 +246,7 @@
 
     function verifyAllCookie()
     {
-      socket.send(verifyCookie("username"));
+      verifyCookie("username");
       verifyCookie("password");
       verifyCookie("loginresult");
     }
@@ -249,9 +261,9 @@
 
     </script>
 
-    <button type="button" onclick="connect()">Connect!</button>
+    <button type="button" onclick="connect()" style="display: none">Connect!</button>
 
-    <button type="button" onclick="test()">Testing!</button>
+    <button type="button" onclick="test()" style="display: none">Testing!</button>
 
 <br>
 <br>
