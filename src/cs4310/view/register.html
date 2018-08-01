@@ -395,10 +395,24 @@
 			 if (results == true)
 			 {
 				 alert("Successfully created account!");
+				 clearfields();
 			 }
 			 else {
 			 	 alert("Username already exists please try another!");
+				 clearusername();
 			 }
+		}
+
+		function clearfields() {
+			document.getElementById("userName").value="";
+			document.getElementById("firstName").value="";
+			document.getElementById("lastName").value="";
+			document.getElementById("password").value="";
+			// document.getElementById("msgBox").value="";
+		}
+
+		function clearusername() {
+			document.getElementById("userName").value="";
 		}
 
 		function verifyCookie(name)
