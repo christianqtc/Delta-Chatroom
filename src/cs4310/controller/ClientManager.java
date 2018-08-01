@@ -170,6 +170,15 @@ public class ClientManager
     {
         client.gThread.interrupt(); // Stop the client thread.
         gClients.remove( client );
+        try
+        {
+            if ( !client.gSocket.isClosed() )
+                client.gSocket.close();
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
         
         client.log( "Disconnected from the server. Reason: " + reason + "(" + statusCode + ")" );
         client.setUserModel(null);
