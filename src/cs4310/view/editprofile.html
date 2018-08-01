@@ -310,11 +310,13 @@
          if (loginresult == false)
          {
            alert("Password is incorrect please try again!");
+           clearpw();
          }
          else
          {
            alert("Your info has been updated!");
            createCookie();
+           clearfields();
          }
 
          }
@@ -362,6 +364,17 @@
           document.cookie = "loginresult=; expires=Thu, 22 Feb 1990 12:00:00 UTC; path=/";
       }
 
+      function clearpw() {
+                document.getElementById("password").value="";
+      }
+
+      function clearfields() {
+        document.getElementById("username").value="";
+        document.getElementById("firstname").value="";
+        document.getElementById("lastname").value="";
+        document.getElementById("password").value="";
+        // document.getElementById("msgBox").value="";
+      }
 
       function sendprofile()
       {
