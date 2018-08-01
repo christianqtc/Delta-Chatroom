@@ -285,7 +285,7 @@
 	    			&emsp;&emsp;
 	      			<button type="reset" class="btn btn-primary btn-lg">Reset</button>
 	    			&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-	      			<center><a onclick="register()" class="btn btn-primary btn-lg" id="register" href="login.html" role="button">Create an Account</a></center>
+	      			<center><a onclick="register()" class="btn btn-primary btn-lg" id="register" href="#" role="button">Create an Account</a></center>
 	    		</div>
 	    		<br><br><br><br>
 	  			</form>
@@ -380,8 +380,54 @@
 			    "type" : "registration"
 			};
 
-			alert("success");
+			// alert("success");
 			socket.send(JSON.stringify(registration));
+		}
+
+		socket.onmessage = function(event){
+			 var received = JSON.parse(event.data);
+			 var results = received.result;
+			 var type = received.type;
+
+			 console.log("message type received: " + type);
+			 console.log("login result received: " + results);
+
+			 if (results == true)
+			 {
+				 alert("Successfully created account!");
+			 }
+			 else {
+			 	 alert("Username already exists please try another!");
+			 }
+		}
+
+		function verifyCookie(name)
+		{
+				var name = name + "=";
+				var seperate = document.cookie.split(';');
+				for(var i=0;i < seperate.length;i++) {
+					var cook = seperate[i];
+					while (cook.charAt(0)==' ')
+							cook = cook.substring(1,cook.length);
+					if (cook.indexOf(name) == 0)
+							return cook.substring(name.length,cook.length);
+				}
+				return null;
+		}
+
+		function createCookie() {
+				var userN = document.getElementById("userName").value;
+				var firstN = document.getElementById("firstName").value;
+				var lastN = document.getElementById("lastName").value;
+				var passW = document.getElementById("password").value;
+				var d = new Date();
+				d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
+				document.cookie = "username="+ userN +"; path=/";
+				document.cookie = "password="+ passW +"; path=/";
+				document.cookie = "loginresult=true; path=/";
+				// alert("Cookies test... set to name= " + UserName);
+				console.log("cookies created..");
+				console.log("Cookies password changed to " + passW);
 		}
 
 </script>
