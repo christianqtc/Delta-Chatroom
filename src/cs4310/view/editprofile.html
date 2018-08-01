@@ -57,8 +57,45 @@
           console.log( "Connection was opened!" );
 
           // Once the connection is opened, it is safe to send data to the server through the WebSocket.
-          socket.send( "Test." );
+          // socket.send( "Test." );
       };
+
+      socket.onmessage = function(event) {
+        handleProfile(event);
+      }
+
+      function handleProfile( event ) {
+         var userN = document.getElementById("username").value;
+         var firstN = document.getElementById("firstname").value;
+         var lastN = document.getElementById("lastname").value;
+         var passW = document.getElementById("password").value;
+         console.log("the received before parsed is :" + event.data);
+         var received = JSON.parse(event.data);
+         var username = received.userName;
+         var text = "";
+         var firstname = received.firstName;
+         var oldusername = received.oldUserName;
+         var lastname = received.lastName;
+         var password = received.password;
+         var jsontype = received.type;
+         var loginresult = received.result;
+
+         console.log("jsontype is " + jsontype);
+
+         console.log("LOGIN is " + received.result);
+
+
+         if (loginresult == false)
+         {
+           alert("Password incorrect!");
+         }
+         else
+         {
+           alert("Your info has been updated!");
+           createCookie();
+         }
+
+         }
 
       function verifyCookie(name)
       {
@@ -81,6 +118,21 @@
         verifyCookie("loginresult");
       }
 
+      function createCookie() {
+          var userN = document.getElementById("username").value;
+          var firstN = document.getElementById("firstname").value;
+          var lastN = document.getElementById("lastname").value;
+          var passW = document.getElementById("password").value;
+  				var d = new Date();
+  				d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
+  				document.cookie = "username="+ userN +"; path=/";
+  				document.cookie = "password="+ passW +"; path=/";
+  				document.cookie = "loginresult=true; path=/";
+  				// alert("Cookies test... set to name= " + UserName);
+  				console.log("cookies created..");
+          console.log("Cookies password changed to " + passW);
+  		}
+
       function deleteCookie()
       {
           document.cookie = "username=; expires=Thu, 22 Feb 1990 12:00:00 UTC; path=/";
@@ -96,14 +148,15 @@
           var lastN = document.getElementById("lastname").value;
           var passW = document.getElementById("password").value;
           var editprofilejson = {
-            Username: userN,
+            userName: userN,
             firstName: firstN,
             lastName: lastN,
             password: passW,
+            oldUserName: verifyCookie("username"),
             type: "registration"
       };
-      socket.send(JSON.stringify(editprofilejson))
-   }
+      socket.send(JSON.stringify(editprofilejson));
+    }
 
 
  </script>
