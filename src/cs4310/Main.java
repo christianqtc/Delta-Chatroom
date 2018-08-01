@@ -33,11 +33,7 @@ public class Main
     public static void main( String[] args )
     {
         // For debugging
-        LOGGER.setLevel(Level.FINER);
-        
-        ConsoleHandler handler = new ConsoleHandler();
-        handler.setLevel(Level.FINER);
-        LOGGER.addHandler(handler);
+        LOGGER.setLevel(Level.INFO);
         
         // Hostname
         String hostName;
@@ -134,7 +130,6 @@ public class Main
                             try {
                                 Level logLevel = Level.parse( cmdArgs.get(1) );
                                 LOGGER.setLevel(logLevel);
-                                handler.setLevel(logLevel);
                                 System.out.println( "Log level set to " + logLevel.toString() );
                             } catch ( IllegalArgumentException e )
                             {
