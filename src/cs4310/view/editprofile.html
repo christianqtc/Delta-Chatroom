@@ -1,50 +1,266 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Delta Chatroom</title>
-    <link rel="stylesheet" type="text/css" href="style.css"></link>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Edit Profile</title>
+    <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Palanquin" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Bad+Script" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style type="text/css">
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #cccccc;
+    }
+
+    h1 {
+      font-family: fantasy;
+      font-size: 4em;
+      border-bottom: 3px solid pink;
+      border-right: 3px solid pink;
+      width: 530px;
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    h2 {
+      font-family: 'Bad Script', cursive;
+      font-size: 2.25em;
+      font-weight: bold;
+      text-align: left;
+      margin-top: 12px;
+    }
+
+    input {
+      width: 80%;
+      padding: 20px;
+      font-size: 1.35em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
+    }
+
+    label {
+      font-family: 'Palanquin', sans-serif;
+      font-size: 1.75em;
+      text-align: left;
+      padding: 12px 12px 12px 0;
+      display: inline-block;
+    }
+
+    #logoutbutton .menubutton {
+        color: white;
+        padding: 12px 30px;
+        padding: 20px 50px 20px 50px 70;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        float: right;
+    }
+
+    #send {
+      background-color: #4CAF50;
+    }
+
+    #send:hover {
+      background-color: #45a049
+    }
+
+    .container {
+      border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 50px;
+    }
+
+    .sm-col {
+      float: left;
+      width: 25%;
+      margin-top: 16px;
+    }
+
+    .lg-col {
+      float: left;
+      width: 75%;
+      margin-top: 16px;
+    }
+
+    .full-col {
+      float: center;
+      width: 80%;
+
+    }
+
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    .button {
+      float: right;
+    }
+
+    .search {
+      float: right;
+    }
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+#send {
+      background-color: #4CAF50;
+        color: white;
+        padding: 12px 30px;
+        padding: 20px 50px 20px 50px 70;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        float: right;
+    }
+
+    #send:hover {
+      background-color: #45a049
+    }
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+  </style>
 </head>
 <body>
-<p></p>
-<h1>Edit Profile</h1>
-<p></p>
-<nav>
-    <ul>
 
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="login.html">Delta Chatroom</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link" href="login.html">Login Page <span class="sr-only">(current)</span></a>&emsp;
+        <a class="nav-item nav-link" href="register.html">Create an Account </a>&emsp;
+        <a class="nav-item nav-link" href="resetCredentials.html">Forgot my Credentials </a>&emsp;
+        <a class="nav-item nav-link" href="chatsite.html">Home Page </a>&emsp;
+        <a class="nav-item nav-link active" href="editprofile.html">Profile Page </a>&emsp;
+        <a class="nav-item nav-link disabled" href="about.html">About Us </a>&emsp;&emsp;&emsp;
+        <form class="form-inline my-2 my-lg-0">
+        <div class="search"><input class="form-control mr-sm-2" type="search" placeholder="Search for Users" aria-label="Search"></div>
+        <div class="search"><button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button></div>
+      </form>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="jumbotron">
+
+  <h1 class="display-4">Delta Chatroom</h1>
+  <br><br>
+  <h2>Welcome to the Delta Chatroom, A completly private instant chatting service.</h2>
+  <h2>Edit your profile information in this page.</h2>
+  <div class="container">
+ <nav>
+    <ul>
         <div class="dropdown">
-  <button class="menubutton">Menu</button>
+  <button class="btn btn-primary btn-lg menubutton">Menu</button>
   <div class="dropdown-content">
     <a href="chatsite.html">Home</a>
     <a href="editprofile.html">Edit Profile</a>
     <a href="#">Contacts</a>
     <a href="#">Other</a>
-  </div>
+  </div></div>
+  <button href="login.html" id="logoutbutton" onclick="deleteCookie()"style="float: right;" type="button" class="btn btn-danger btn-lg">Logout</button>
 </div>
-
-<a href="" id="logoutbutton" onclick="deleteCookie()"style="float: right; margin-left: 200px">Logout</a>
-
 </nav>
+<hr class="my-4">
+  <br><br>
+      <div class=".fixed-bottom">
+    <div class="container">
 
+      <form method="POST" name="aform" target="_top">
 
-<tr><td bgcolor="lightblue"><table cellpadding='0' cellspacing='0' border='0' width='100%'><tr><td bgcolor="lightblue" align="center" style="text-align:center;padding:2;padding-bottom:4"><b><font size="2" color="white" face="verdana,arial"><b>Update your information</b></font></td></tr>
-<tr><td bgcolor="lightgreen" style="padding:5; text-align:center;"><br />
-<style type="text/css"  scoped="scoped">
-        form { text-align:center; }
-	td { text-align:left; color: black; font-size: 1.4em; margin-bottom: 50px;}
-	table.center { width="150%"; height="150%"margin-left:50px; margin-right:50px;}
-	input { font-size: 1.5em; margin-bottom: 20px;}
-	</style><form method="post" name="aform" target="_top">
-<input type="hidden" name="action" value="edit2" autocomplete="off">
-<center><table class='center'>
-<tr><td>Confirm Password:</td><td><input type="password" id="password"></td></tr>
-<tr><td>Username:</td><td><input type="text" id="username"></td></tr>
-<tr><td>First Name:</td><td><input type="fname" id="firstname"></td></tr>
-<tr><td>Last Name:</td><td><input type="lname" id="lastname"></td></tr>
-<tr><td>&nbsp;</td><td><input type="button" id="send" name="send" value="Update Info" onclick="sendprofile()"></p></td>
-</table></center>
-</form>
-</td></tr></table></td></tr></table></center></font>
+      <div class="row">
+        <input type="hidden" name="action" value="edit2" autocomplete="off">
+      </div>
+
+      <div class="row">
+        <div class="sm-col">
+           <label for="password">Confirm Password:</label>
+        </div>
+        <div class="lg-col">
+           <input type="password" id="password" name="password" placeholder="Please enter password ..." required>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="sm-col">
+            <label for="username">Username:</label>
+        </div>
+        <div class="lg-col">
+          <input type="text" id="username" name="username" placeholder="Please enter username ..." required>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="sm-col">
+            <label for="firstname">First Name:</label>
+        </div>
+        <div class="lg-col">
+          <input type="text" id="firstname" name="firstname" placeholder="Please enter your first name ..." required>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="sm-col">
+            <label for="lastname">Last Name:</label>
+        </div>
+        <div class="lg-col">
+          <input type="text" id="lastname" name="lastname" placeholder="Please enter your last name ..." required>
+        </div>
+    </div>
+
+    <br><br><br>
+    <div class="row">
+          &emsp;&emsp;
+            <button type="reset" class="btn btn-primary btn-lg">Reset</button>
+          &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+          &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+            <center><button onclick="sendprofile()" class="btn btn-primary btn-lg" type="button" id="send" name="send" value="Update Info" href="chatsite.html.html" role="button">Update Info</button></center>
+        </div>
+        <br><br><br><br>
+    </form>
 
 
   <script>
@@ -57,8 +273,14 @@
           console.log( "Connection was opened!" );
 
           // Once the connection is opened, it is safe to send data to the server through the WebSocket.
-          // socket.send( "Test." );
-      };
+
+          var loginInfo =
+          {
+            userName: verifyCookie( "username" ),
+            password: verifyCookie( "password" ),
+            type: "login"
+          };
+      }
 
       socket.onmessage = function(event) {
         handleProfile(event);
@@ -87,7 +309,7 @@
 
          if (loginresult == false)
          {
-           alert("Password incorrect!");
+           alert("Password is incorrect please try again!");
          }
          else
          {
