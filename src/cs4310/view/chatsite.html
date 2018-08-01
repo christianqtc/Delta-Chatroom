@@ -1,26 +1,305 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Delta Chatroom</title>
-    <link rel="stylesheet" type="text/css" href="style.css"></link>
+    <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Palanquin" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Bad+Script" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style type="text/css">
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #cccccc;
+    }
+
+    h1 {
+      font-family: fantasy;
+      font-size: 4em;
+      border-bottom: 3px solid pink;
+      border-right: 3px solid pink;
+      width: 530px;
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    h2 {
+      font-family: 'Bad Script', cursive;
+      font-size: 2.25em;
+      font-weight: bold;
+      text-align: left;
+      margin-top: 12px;
+    }
+
+    input[type=text] {
+      width: 80%;
+      padding: 20px;
+      font-size: 1.35em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
+    }
+
+    #logoutbutton .menubutton {
+        color: white;
+        padding: 12px 30px;
+        padding: 20px 50px 20px 50px 70;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        float: right;
+    }
+
+
+
+    .container {
+      border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 50px;
+    }
+
+    .full-col {
+      float: center;
+      width: 300%;
+
+    }
+
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    .button {
+      float: right;
+    }
+
+    .search {
+      float: right;
+    }
+
+.chatbox {
+    width: 500px;
+    min-width: 390px;
+    height: 600px;
+    background: #E0FFFF;
+    padding: 25px;
+    margin: 40px auto;
+    box-shadow: 0 5px #ccc;
+    float: left;
+}
+
+.chatlogs {
+    padding: 10px;
+    width: 100%;
+    height: 450px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.chat {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.chat .username {
+    width: 75px;
+    height: 30px;
+    background: #ccc;
+    border-radius: 4px;
+    margin: 5px 20px 0;
+    padding: 5px;
+    font-size: 18px;
+}
+
+.chat .chat-message {
+    width: 70%
+    padding: 15px;
+    margin: 5px 20px 0;
+    background: #4682B4;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 18px;
+}
+
+.userbox {
+    width: 200px;
+    min-width: 200px;
+    height: 600px;
+    background: #FF0000;
+    padding: 25px;
+    margin: 40px auto;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+p.useronline {
+    width: 50px;
+    height: 30px;
+    position:relative;
+}
+div.userlistbox {
+  margin:0;
+  padding:0;
+  position:absolute;
+  bottom:0;
+}
+
+div::first-line {
+    font-weight:bold;
+}
+
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.textarea #textfield {
+  width: 600px;
+  height: 120px;
+  border: 3px solid #cccccc;
+  padding: 5px;
+  font-family: Tahoma, sans-serif;
+  background-image: url(bg.gif);
+  background-position: bottom right;
+  background-repeat: no-repeat;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+table {
+    border-collapse: collapse;
+    border: 1px solid black;
+    background: #fff;
+    padding: 25px;
+    margin: 40px;
+}
+th, td
+{
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even)
+{
+background-color: #f2f2f2;
+}
+
+  </style>
 </head>
 <body>
-<p></p>
-<h1>Delta Chatroom</h1>
-<p></p>
-<nav>
-    <ul>
 
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="login.html">Delta Chatroom</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link" href="login.html">Login Page <span class="sr-only">(current)</span></a>&emsp;
+        <a class="nav-item nav-link" href="register.html">Create an Account </a>&emsp;
+        <a class="nav-item nav-link" href="resetCredentials.html">Forgot my Credentials </a>&emsp;
+        <a class="nav-item nav-link active" href="chatsite.html">Home Page </a>&emsp;
+        <a class="nav-item nav-link" href="editprofile.html">Profile Page </a>&emsp;
+        <a class="nav-item nav-link disabled" href="about.html">About Us </a>&emsp;&emsp;&emsp;
+        <form class="form-inline my-2 my-lg-0">
+        <div class="search"><input class="form-control mr-sm-2" type="search" placeholder="Search for Users" aria-label="Search"></div>
+        <div class="search"><button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button></div>
+      </form>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="jumbotron">
+
+  <h1 class="display-4">Delta Chatroom</h1>
+  <br><br>
+  <h2>Welcome to the Delta Chatroom, A completly private instant chatting service.</h2>
+  <h2>You have reached your homepage!.</h2>
+  <div class="container">
+ <nav>
+    <ul>
         <div class="dropdown">
-  <button class="menubutton">Menu</button>
+  <button class="btn btn-primary btn-lg menubutton">Menu</button>
   <div class="dropdown-content">
     <a href="chatsite.html">Home</a>
     <a href="editprofile.html">Edit Profile</a>
     <a href="#">Contacts</a>
     <a href="#">Other</a>
-  </div>
+  </div></div>
+  <button href="login.html" id="logoutbutton" onclick="deleteCookie()"style="float: right;" type="button" class="btn btn-danger btn-lg">Logout</button>
 </div>
+</nav>
+  <hr class="my-4">
+  <br><br>
+      <div class=".fixed-bottom">
+    <div class="container">
+
+<div class="row">
+  <div class="full-col">
+
+  <table border="0" width="100%">
+
+  <tr height="100%">
+
+  <td width="15%" align="top" border="1" height="100%" style="">
+
+  <div id="userlistbox" class"bordered" style="border: 3px solid lightblue; width:116%; height:100%; border-radius: 8px;"></div>
+
+  </td>
+  <td>
+  <iframe width="100%" height="400px" id="chatbox"></iframe>
+  <tr>
+  <td>&nbsp;</td>
+  <td>
+
+<br><br>
+
+<input id="msgBox" type="text" name="text" rows="4" cols="50" size="75" maxlength="256" placeholder="Chat with us!" autocomplete="off">&emsp;&emsp;
+  <input type="button" class="btn btn-success btn-lg" id="send" name="send" value="Send" onclick="sendmessage()"></p></td>
+
+
+    </ul>
+</nav>
+
+<br>
+</div>
+    </div>
+  </p> </div></div>
 
     <script>
     var ip = "%s"; // "134.154.62.221";
@@ -109,7 +388,7 @@
                 let msg = received.message;
                 let time = parseInt(received.posted);
                 let d = Date(time);
-                
+
                 console.log("this is a message!");
 
                 text = "(" + dshort + ") <b>" + username + "</b>: " + msg + "<br>";
@@ -121,7 +400,7 @@
                     chatz.write(text);
                     document.getElementById("chatbox").contentWindow;
                 }
-                
+
                 if (usersArr.includes(username) == false)
                 {
                     usersArr.push(username);
@@ -137,12 +416,12 @@
                 if (result == true)
                 {
                     //createCookie(result);
-                    
+
                     var reqmsgs =
                     {
                         type: "messagerequest"
                     };
-                    socket.send(JSON.stringify(reqmsgs));
+                    // socket.send(JSON.stringify(reqmsgs));
                 }
 
             }
@@ -260,7 +539,7 @@
     }
 
     </script>
-
+<!--
     <button type="button" onclick="connect()" style="display: none">Connect!</button>
 
     <button type="button" onclick="test()" style="display: none">Testing!</button>
@@ -302,7 +581,7 @@
 </nav>
 
 <br>
-
+ -->
 
 <style>
 table {
