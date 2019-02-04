@@ -37,3 +37,7 @@ For the project we will implement a chat board application in Java with UI, back
       ssahota7@horizon.csueastbay.edu
 * Daniel Vazquez
       daniel.vazquez0112@gmail.com
+      
+#### Documents ####
+* [Software Design Description](https://docs.google.com/document/d/1mi7OlaSSPUDGksiv9gIapszpS4Zxx_Xj0-f4RDzWWWo/edit?usp=sharing)
+* [Software Requirements Specification](https://docs.google.com/document/d/1wjdMwy8TCC7_q_1AGjjZRndSiIEnB4EcJEwTFaIY1S4/edit?usp=sharing)
